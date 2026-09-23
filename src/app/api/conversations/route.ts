@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { startConversationSchema } from "@/lib/validation/chat";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { notifyAdmins } from "@/lib/notifications";
 
 // SPEC §30: rate-limit conversation creation.
 const RATE_LIMIT = { limit: 5, windowMs: 60 * 60 * 1000 };
@@ -77,6 +78,13 @@ export async function POST(request: Request) {
     console.error("first message insert failed", messageError);
     return NextResponse.json({ error: "Could not send your message." }, { status: 500 });
   }
+
+  await notifyAdmins({
+    category: "new_conversation",
+    title: "New chat conversation",
+    body: `${parsed.data.visitorName} started a chat (${parsed.data.serviceContext.replace("_", " ")}).`,
+    linkPath: `/admin/communication/${conversation.id}`,
+  });
 
   return NextResponse.json({ conversationId: conversation.id }, { status: 201 });
 }

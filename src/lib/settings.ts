@@ -24,5 +24,7 @@ export async function getSetting<T = string>(key: string, fallback: T): Promise<
 }
 
 export async function getWhatsAppNumber(): Promise<string> {
-  return getSetting("whatsapp_number", "");
+  // Dev/local fallback only — production should always configure this via
+  // Admin -> Settings -> Communication -> WhatsApp instead (SPEC §18).
+  return getSetting("whatsapp_number", process.env.WHATSAPP_FALLBACK_NUMBER ?? "");
 }

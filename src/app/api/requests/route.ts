@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createMinistryRequestSchema } from "@/lib/validation/ministry-request";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { notifyAdmins } from "@/lib/notifications";
+import { sendEmail } from "@/lib/email/resend";
+import { visitorRequestConfirmationEmail } from "@/lib/email/templates";
 
 // SPEC §30: form submissions rate-limited per IP.
 const RATE_LIMIT = { limit: 10, windowMs: 60 * 60 * 1000 };
@@ -50,8 +53,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Could not submit your request." }, { status: 500 });
   }
 
-  // Admin email/in-app notification (SPEC §19) is wired up alongside the
-  // notification system in Phase 5 — not yet implemented here.
+  await notifyAdmins({
+    category: "new_request",
+    title: `New ${parsed.data.requestType.replace("_", " ")} request`,
+    body: `${parsed.data.name} submitted a request.`,
+    linkPath: "/admin/requests",
+  });
+
+  if (parsed.data.contactEmail) {
+    const { subject, html } = visitorRequestConfirmationEmail({ name: parsed.data.name });
+    await sendEmail({ to: parsed.data.contactEmail, subject, html });
+  }
 
   return NextResponse.json({ id: data.id }, { status: 201 });
 }

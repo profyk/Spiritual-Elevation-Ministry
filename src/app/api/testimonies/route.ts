@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createTestimonySchema } from "@/lib/validation/testimony";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { notifyAdmins } from "@/lib/notifications";
 
 const RATE_LIMIT = { limit: 5, windowMs: 60 * 60 * 1000 };
 
@@ -42,6 +43,13 @@ export async function POST(request: Request) {
     console.error("testimonies insert failed", error);
     return NextResponse.json({ error: "Could not submit your testimony." }, { status: 500 });
   }
+
+  await notifyAdmins({
+    category: "new_testimony",
+    title: "New testimony awaiting review",
+    body: "A visitor submitted a testimony for moderation.",
+    linkPath: "/admin/testimonies",
+  });
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }

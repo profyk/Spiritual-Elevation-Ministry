@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/auth/get-admin";
+import { createClient } from "@/lib/supabase/server";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { SignOutButton } from "@/components/admin/SignOutButton";
+import { NotificationBell } from "@/components/admin/NotificationBell";
 
 const MFA_MANDATORY_ROLES = new Set(["admin", "super_admin"]);
 
@@ -31,11 +33,22 @@ export default async function AdminLayout({
     redirect("/admin/mfa/verify");
   }
 
+  const supabase = await createClient();
+  const { data: notifications } = await supabase
+    .from("notifications")
+    .select("id, title, body, link_url, is_read, created_at")
+    .eq("recipient_admin_id", admin.id)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
   return (
     <div className="flex min-h-screen flex-col bg-neutral-50">
       <header className="flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-3">
         <span className="font-medium">Spiritual Elevation Ministry — Admin</span>
-        <SignOutButton />
+        <div className="flex items-center gap-2">
+          <NotificationBell adminId={admin.id} initialNotifications={notifications ?? []} />
+          <SignOutButton />
+        </div>
       </header>
       <div className="flex flex-1">
         <AdminSidebar role={admin.role} />
