@@ -9,6 +9,7 @@ const NAV_ITEMS: { href: string; label: string; minRole?: AdminRole }[] = [
   { href: "/admin/content", label: "Content" },
   { href: "/admin/events", label: "Events" },
   { href: "/admin/coaching", label: "Coaching" },
+  { href: "/admin/communication", label: "Communication" },
   { href: "/admin/requests", label: "Requests" },
   { href: "/admin/testimonies", label: "Testimonies" },
   { href: "/admin/settings", label: "Settings", minRole: "admin" },

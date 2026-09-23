@@ -13,8 +13,8 @@ export default function ContactPage() {
     <Container className="max-w-2xl py-12">
       <h1 className="text-2xl font-semibold text-neutral-900">Talk to the Ministry</h1>
       <p className="mt-3 text-neutral-600">
-        Reach out for prayer, questions, or anything else. A live chat option is coming soon —
-        for now, send a message below or reach us on WhatsApp.
+        Reach out for prayer, questions, or anything else. Use the chat button in the bottom
+        corner for a live conversation, send a message below, or reach us on WhatsApp.
       </p>
 
       <div className="mt-6 flex flex-wrap gap-3">
