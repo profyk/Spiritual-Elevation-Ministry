@@ -1,3 +1,5 @@
+import { Resend } from "resend";
+
 /**
  * Thin wrapper around Resend (SPEC §19). No-ops with a console warning if
  * RESEND_API_KEY isn't configured, so the rest of the app never has to
@@ -22,17 +24,10 @@ export async function sendEmail({
   }
 
   try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ from, to, subject, html }),
-    });
-
-    if (!response.ok) {
-      console.error("Resend send failed", response.status, await response.text());
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({ from, to, subject, html });
+    if (error) {
+      console.error("Resend send failed", error);
     }
   } catch (error) {
     // Email is never allowed to block the caller's real action (e.g.

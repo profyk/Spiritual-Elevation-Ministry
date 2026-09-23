@@ -72,11 +72,23 @@ as $$
   select coalesce(current_admin_role() in ('admin', 'super_admin'), false);
 $$;
 
-create or replace function public.is_staff_or_above()
+-- Any active admin_users row, Moderator included — deliberately weaker
+-- than is_staff_or_above() below. Use only for the handful of things
+-- Moderator is meant to touch (testimony moderation, content review);
+-- everything else (content writes, events, coaching, requests, chat)
+-- must gate on is_staff_or_above() instead.
+create or replace function public.is_moderator_or_above()
 returns boolean
 language sql stable security definer set search_path = public
 as $$
   select current_admin_role() is not null;
+$$;
+
+create or replace function public.is_staff_or_above()
+returns boolean
+language sql stable security definer set search_path = public
+as $$
+  select coalesce(current_admin_role() in ('staff', 'admin', 'super_admin'), false);
 $$;
 
 create or replace function public.is_super_admin()
@@ -274,9 +286,11 @@ create policy "anyone reads published content"
   on content_items for select
   using (status = 'published');
 
-create policy "staff+ reads all content"
+-- Moderator gets read access for "content review" (SPEC §21) but not
+-- write access — that's staff+ only, below.
+create policy "moderator+ reads all content"
   on content_items for select
-  using (is_staff_or_above());
+  using (is_moderator_or_above());
 
 create policy "staff+ manages content"
   on content_items for all
@@ -566,14 +580,16 @@ create policy "anyone submits a testimony"
   on testimonies for insert
   with check (status = 'pending');
 
-create policy "staff+ moderates testimonies"
+-- Testimony moderation is Moderator's core job (SPEC §21) — moderator+,
+-- not staff+, gates read/update here.
+create policy "moderator+ moderates testimonies"
   on testimonies for select
-  using (is_staff_or_above());
+  using (is_moderator_or_above());
 
-create policy "staff+ updates testimonies"
+create policy "moderator+ updates testimonies"
   on testimonies for update
-  using (is_staff_or_above())
-  with check (is_staff_or_above());
+  using (is_moderator_or_above())
+  with check (is_moderator_or_above());
 
 -- ─────────────────────────────────────────────────────────────────────────
 -- Unified ministry requests

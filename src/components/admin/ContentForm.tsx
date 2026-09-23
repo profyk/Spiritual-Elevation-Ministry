@@ -38,16 +38,23 @@ export function ContentForm({
   action,
   initialValues,
   submitLabel = "Save",
+  readOnly = false,
 }: {
   action: (formData: FormData) => void;
   initialValues?: Partial<ContentFormValues>;
   submitLabel?: string;
+  /** Moderator gets read-only "content review" access (SPEC §21) — a
+   * native <fieldset disabled> is enough to lock every field without
+   * threading a prop through each one, and the server action re-checks
+   * the role anyway so this is a UX convenience, not the real boundary. */
+  readOnly?: boolean;
 }) {
   const [values, setValues] = useState<ContentFormValues>({ ...DEFAULTS, ...initialValues });
   const [slugTouched, setSlugTouched] = useState(Boolean(initialValues?.slug));
 
   return (
     <form action={action} className="max-w-2xl space-y-4">
+      <fieldset disabled={readOnly} className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="contentType" className="mb-1 block text-sm font-medium">
@@ -199,12 +206,18 @@ export function ContentForm({
         </div>
       )}
 
-      <button
-        type="submit"
-        className="rounded-md bg-amber-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-amber-900"
-      >
-        {submitLabel}
-      </button>
+      </fieldset>
+
+      {readOnly ? (
+        <p className="text-xs text-neutral-500">Read-only — your role can review but not edit content.</p>
+      ) : (
+        <button
+          type="submit"
+          className="rounded-md bg-amber-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-amber-900"
+        >
+          {submitLabel}
+        </button>
+      )}
     </form>
   );
 }

@@ -21,8 +21,18 @@ const ROLE_RANK: Record<AdminRole, number> = {
   super_admin: 3,
 };
 
-export function isStaffOrAbove(admin: AdminProfile | null): admin is AdminProfile {
+/**
+ * Any active admin, Moderator included. Use only for what Moderator is
+ * actually meant to touch — testimony moderation, content review (SPEC
+ * §21). Everything else (content writes, events, coaching, requests,
+ * chat) must gate on isStaffOrAbove() below instead.
+ */
+export function isModeratorOrAbove(admin: AdminProfile | null): admin is AdminProfile {
   return !!admin && admin.isActive;
+}
+
+export function isStaffOrAbove(admin: AdminProfile | null): admin is AdminProfile {
+  return !!admin && admin.isActive && ROLE_RANK[admin.role] >= ROLE_RANK.staff;
 }
 
 export function isAdminOrAbove(admin: AdminProfile | null): boolean {

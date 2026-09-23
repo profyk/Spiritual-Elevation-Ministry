@@ -198,8 +198,10 @@ create policy "staff reads notes"
 - **Database**: Supabase-hosted Postgres (same project provides Auth/Realtime/Storage).
 - **Environments**: `production` and `preview` (per-PR or per-branch preview deployments against a
   separate Supabase project or schema, so preview traffic never touches production visitor data).
-- **CI**: on every push — typecheck, lint, Vitest unit tests; on PR — Playwright e2e against a
-  preview deployment. `[PLACEHOLDER: confirm CI provider — GitHub Actions assumed]`.
+- **CI**: GitHub Actions (`.github/workflows/ci.yml`) — on every push/PR: build (typecheck + lint,
+  since `next build` runs both), Vitest unit tests, `npm audit`, and a gitleaks secret scan
+  (SPEC §27 item 12). Playwright e2e isn't wired into CI yet — it needs a deployed preview or a
+  way to boot the app with a real Supabase project in the runner, neither of which exists yet.
 - **Migrations**: applied via `supabase db push` (or the CLI's migration apply) in CI before the
   app deployment that depends on them goes live — never applied manually against production.
 - **Secrets**: all in the hosting provider's environment variable store, documented in

@@ -115,7 +115,13 @@ export function ChatWidget() {
             <IntakeForm onSubmit={handleStart} />
           ) : (
             <>
-              <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto p-3">
+              <div
+                ref={scrollRef}
+                role="log"
+                aria-live="polite"
+                aria-label="Chat messages"
+                className="flex-1 space-y-2 overflow-y-auto p-3"
+              >
                 {loadingThread && <p className="text-xs text-neutral-400">Loading…</p>}
                 {messages.map((m) => (
                   <div

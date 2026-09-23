@@ -3,12 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getAdminSession } from "@/lib/auth/get-admin";
-import { isStaffOrAbove } from "@/lib/permissions";
+import { isModeratorOrAbove } from "@/lib/permissions";
 import { writeAuditLog } from "@/lib/audit";
 
-async function requireStaff() {
+// Testimony moderation is Moderator's core job (SPEC §21) — gate on
+// moderator+, not staff+, so Moderator keeps this ability.
+async function requireModerator() {
   const session = await getAdminSession();
-  if (!isStaffOrAbove(session?.admin ?? null)) throw new Error("Not authorized.");
+  if (!isModeratorOrAbove(session?.admin ?? null)) throw new Error("Not authorized.");
   return session!;
 }
 
@@ -17,7 +19,7 @@ export async function moderateTestimony(
   decision: "approved" | "rejected",
   internalReason?: string
 ) {
-  const session = await requireStaff();
+  const session = await requireModerator();
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -43,7 +45,7 @@ export async function moderateTestimony(
 }
 
 export async function toggleTestimonyFeatured(id: string, featured: boolean) {
-  const session = await requireStaff();
+  const session = await requireModerator();
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -65,7 +67,7 @@ export async function toggleTestimonyFeatured(id: string, featured: boolean) {
 }
 
 export async function archiveTestimony(id: string) {
-  const session = await requireStaff();
+  const session = await requireModerator();
   const supabase = await createClient();
 
   const { error } = await supabase.from("testimonies").update({ status: "archived" }).eq("id", id);

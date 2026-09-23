@@ -343,7 +343,7 @@ This is the section the hardening phase reviews against directly:
     role/permission (§29) — append-only, not editable even by Super Admin.
 11. Automated tests prove: cross-visitor conversation isolation, admin-note invisibility to
     visitors, and role-boundary enforcement (a Staff user cannot hit a Super-Admin-only route).
-12. Dependency and secret scanning in CI `[PLACEHOLDER: confirm CI provider]`.
+12. Dependency and secret scanning in CI — GitHub Actions, `npm audit` + gitleaks.
 
 ## 28. Data Retention & Deletion
 
@@ -476,7 +476,6 @@ from the kickoff message:
 - Confirmed data retention period, currently suggested at 24 months (§28).
 - Primary site language (§40).
 - Email provider account (Resend or equivalent) and sending domain (§19).
-- CI provider, if dependency/secret scanning is required at launch (§27).
 
 ---
 

@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getAdminSession } from "@/lib/auth/get-admin";
+import { isStaffOrAbove } from "@/lib/permissions";
 import { ContentForm } from "@/components/admin/ContentForm";
 import { updateContentItem } from "../actions";
 
@@ -9,6 +11,10 @@ export default async function EditContentPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const session = await getAdminSession();
+  // Moderator gets read-only "content review" (SPEC §21) — the form
+  // itself locks via readOnly below; the server action re-checks too.
+  const readOnly = !isStaffOrAbove(session?.admin ?? null);
   const supabase = await createClient();
   const { data: item } = await supabase
     .from("content_items")
@@ -26,6 +32,7 @@ export default async function EditContentPage({
       <ContentForm
         action={boundAction}
         submitLabel="Save changes"
+        readOnly={readOnly}
         initialValues={{
           contentType: item.content_type,
           title: item.title,

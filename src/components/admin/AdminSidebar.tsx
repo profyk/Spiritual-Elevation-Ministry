@@ -6,11 +6,14 @@ import type { AdminRole } from "@/lib/permissions";
 
 const NAV_ITEMS: { href: string; label: string; minRole?: AdminRole }[] = [
   { href: "/admin", label: "Dashboard" },
+  // Content stays visible to Moderator (read-only "content review",
+  // SPEC §21) — the rest below require staff+, matching the RLS/server
+  // action boundary in lib/permissions.ts.
   { href: "/admin/content", label: "Content" },
-  { href: "/admin/events", label: "Events" },
-  { href: "/admin/coaching", label: "Coaching" },
-  { href: "/admin/communication", label: "Communication" },
-  { href: "/admin/requests", label: "Requests" },
+  { href: "/admin/events", label: "Events", minRole: "staff" },
+  { href: "/admin/coaching", label: "Coaching", minRole: "staff" },
+  { href: "/admin/communication", label: "Communication", minRole: "staff" },
+  { href: "/admin/requests", label: "Requests", minRole: "staff" },
   { href: "/admin/testimonies", label: "Testimonies" },
   { href: "/admin/settings", label: "Settings", minRole: "admin" },
   { href: "/admin/users", label: "Users & Roles", minRole: "super_admin" },

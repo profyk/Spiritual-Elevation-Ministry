@@ -60,7 +60,13 @@ export function StaffChatThread({
 
   return (
     <div className="flex h-[32rem] flex-col rounded-lg border border-neutral-200 bg-white">
-      <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto p-4">
+      <div
+        ref={scrollRef}
+        role="log"
+        aria-live="polite"
+        aria-label="Conversation messages"
+        className="flex-1 space-y-2 overflow-y-auto p-4"
+      >
         {messages.map((m) => (
           <div
             key={m.id}
