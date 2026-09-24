@@ -92,7 +92,7 @@ export function StaffChatThread({
   }
 
   return (
-    <div className="flex h-[32rem] flex-col rounded-lg border border-neutral-200 bg-white">
+    <div className="flex h-[32rem] flex-col rounded-lg border border-line bg-surface">
       <div
         ref={scrollRef}
         role="log"
@@ -105,10 +105,10 @@ export function StaffChatThread({
             key={m.id}
             className={`max-w-[75%] rounded-lg px-3 py-2 text-sm ${
               m.sender_type === "staff"
-                ? "ml-auto bg-amber-800 text-white"
+                ? "ml-auto bg-accent text-white"
                 : m.sender_type === "system"
-                  ? "mx-auto bg-neutral-50 text-neutral-500"
-                  : "bg-neutral-100 text-neutral-800"
+                  ? "mx-auto bg-surface-2 text-ink-faint"
+                  : "bg-surface-3 text-ink"
             }`}
           >
             {m.body}
@@ -116,25 +116,25 @@ export function StaffChatThread({
           </div>
         ))}
         {messages.length === 0 && (
-          <p className="text-sm text-neutral-400">No messages yet.</p>
+          <p className="text-sm text-ink-faint">No messages yet.</p>
         )}
       </div>
-      <form onSubmit={handleSubmit} className="border-t border-neutral-200 p-3">
-        {uploadError && <p className="mb-1 text-xs text-red-600">{uploadError}</p>}
+      <form onSubmit={handleSubmit} className="border-t border-line p-3">
+        {uploadError && <p className="mb-1 text-xs text-danger-ink">{uploadError}</p>}
         {pendingAttachment && (
-          <p className="mb-1 flex items-center gap-1 text-xs text-neutral-500">
+          <p className="mb-1 flex items-center gap-1 text-xs text-ink-faint">
             <Paperclip className="h-3 w-3" /> {pendingAttachment.name}
             <button
               type="button"
               onClick={() => setPendingAttachment(null)}
-              className="ml-1 text-neutral-400 hover:text-neutral-700"
+              className="ml-1 text-ink-faint hover:text-ink-muted"
             >
               remove
             </button>
           </p>
         )}
         <div className="flex gap-2">
-          <label className="flex cursor-pointer items-center justify-center rounded-md border border-neutral-300 px-2 text-neutral-500 hover:bg-neutral-50">
+          <label className="flex cursor-pointer items-center justify-center rounded-md border border-line px-2 text-ink-faint hover:bg-surface-2">
             {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}
             <input type="file" onChange={handleFileChange} disabled={uploading} className="hidden" />
           </label>
@@ -142,12 +142,12 @@ export function StaffChatThread({
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder="Reply…"
-            className="flex-1 rounded-md border border-neutral-300 px-3 py-1.5 text-sm"
+            className="flex-1 rounded-md border border-line px-3 py-1.5 text-sm"
           />
           <button
             type="submit"
             disabled={isPending || uploading}
-            className="rounded-md bg-amber-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-900 disabled:opacity-50"
+            className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50"
           >
             Send
           </button>

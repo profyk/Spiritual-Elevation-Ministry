@@ -16,6 +16,7 @@ interface EventListItem {
   start_at: string;
   location_address: string | null;
   coverUrl: string | null;
+  coverAlt: string;
 }
 
 async function getUpcomingEvents(): Promise<EventListItem[]> {
@@ -27,31 +28,31 @@ export default async function EventsPage() {
 
   return (
     <Container className="max-w-3xl py-12">
-      <CalendarDays className="h-8 w-8 text-amber-800" aria-hidden="true" />
-      <h1 className="mt-4 text-2xl font-semibold text-neutral-900">Events &amp; Conferences</h1>
-      <p className="mt-3 text-neutral-600">Upcoming ministry gatherings.</p>
+      <CalendarDays className="h-8 w-8 text-accent-ink" aria-hidden="true" />
+      <h1 className="mt-4 text-2xl font-semibold text-ink">Events &amp; Conferences</h1>
+      <p className="mt-3 text-ink-muted">Upcoming ministry gatherings.</p>
 
       <div className="mt-8 space-y-4">
         {events.length === 0 && (
-          <p className="text-sm text-neutral-500">No upcoming events published yet.</p>
+          <p className="text-sm text-ink-faint">No upcoming events published yet.</p>
         )}
         {events.map((event) => (
           <Link
             key={event.id}
             href={`/services/events/${event.slug}`}
-            className="flex gap-4 rounded-lg border border-neutral-200 p-5 hover:border-amber-800"
+            className="flex gap-4 rounded-lg border border-line p-5 hover:border-accent-line"
           >
             {event.coverUrl && (
               // eslint-disable-next-line @next/next/no-img-element -- short-lived signed URL
               <img
                 src={event.coverUrl}
-                alt=""
+                alt={event.coverAlt}
                 className="h-16 w-16 flex-shrink-0 rounded-md object-cover"
               />
             )}
             <div>
-              <h2 className="font-medium text-neutral-900">{event.title}</h2>
-              <p className="mt-1 text-sm text-neutral-500">
+              <h2 className="font-medium text-ink">{event.title}</h2>
+              <p className="mt-1 text-sm text-ink-faint">
                 {new Date(event.start_at).toLocaleString(undefined, {
                   dateStyle: "medium",
                   timeStyle: "short",

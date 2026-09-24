@@ -7,6 +7,7 @@ const CATEGORIES: { value: NotificationCategory; label: string }[] = [
   { value: "new_request", label: "New ministry request" },
   { value: "new_conversation", label: "New chat conversation" },
   { value: "new_testimony", label: "New testimony to review" },
+  { value: "new_rsvp", label: "New event RSVP" },
 ];
 
 interface NotificationPreference {
@@ -26,7 +27,7 @@ export default async function NotificationPreferencesPage() {
   return (
     <div className="max-w-md">
       <h1 className="mb-2 text-xl font-semibold">Notification Preferences</h1>
-      <p className="mb-6 text-sm text-neutral-500">
+      <p className="mb-6 text-sm text-ink-faint">
         In-app notifications for items assigned to you are always on. This controls whether you
         also get an email for each category.
       </p>

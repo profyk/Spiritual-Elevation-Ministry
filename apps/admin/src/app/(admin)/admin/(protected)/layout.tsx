@@ -5,6 +5,7 @@ import { adminApiFetchServer } from "@/lib/api-client";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { SignOutButton } from "@/components/admin/SignOutButton";
 import { NotificationBell } from "@/components/admin/NotificationBell";
+import { ThemeToggle } from "@/components/admin/ThemeToggle";
 
 const MFA_MANDATORY_ROLES = new Set(["admin", "super_admin"]);
 
@@ -39,13 +40,14 @@ export default async function AdminLayout({
   >("/admin/notifications", session.accessToken);
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-neutral-50">
-      <header className="flex flex-shrink-0 items-center justify-between border-b border-neutral-200 bg-white px-6 py-3">
+    <div className="flex h-screen flex-col overflow-hidden">
+      <header className="flex flex-shrink-0 items-center justify-between border-b border-line bg-surface px-6 py-3">
         <div className="flex items-center gap-3">
           <Image src="/brand/logo.png" alt="" aria-hidden width={36} height={36} className="rounded-sm" />
           <span className="font-medium">Spiritual Elevation Ministry — Admin</span>
         </div>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <NotificationBell adminId={admin.id} initialNotifications={notifications ?? []} />
           <SignOutButton />
         </div>

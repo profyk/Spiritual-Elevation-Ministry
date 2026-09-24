@@ -124,8 +124,8 @@ export function ChatWidget() {
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {open && (
-        <div className="mb-3 flex h-[28rem] w-80 flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-xl">
-          <div className="flex items-center justify-between border-b border-neutral-200 bg-amber-800 px-4 py-3 text-white">
+        <div className="mb-3 flex h-[28rem] w-80 flex-col overflow-hidden rounded-lg border border-line bg-surface shadow-xl">
+          <div className="flex items-center justify-between border-b border-line bg-accent px-4 py-3 text-white">
             <span className="text-sm font-medium">Talk to the Ministry</span>
             <button onClick={() => setOpen(false)} aria-label="Close chat" className="hover:opacity-80">
               <X className="h-4 w-4" />
@@ -143,14 +143,14 @@ export function ChatWidget() {
                 aria-label="Chat messages"
                 className="flex-1 space-y-2 overflow-y-auto p-3"
               >
-                {loadingThread && <p className="text-xs text-neutral-400">Loading…</p>}
+                {loadingThread && <p className="text-xs text-ink-faint">Loading…</p>}
                 {messages.map((m) => (
                   <div
                     key={m.id}
                     className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
                       m.sender_type === "visitor"
-                        ? "ml-auto bg-amber-800 text-white"
-                        : "bg-neutral-100 text-neutral-800"
+                        ? "ml-auto bg-accent text-white"
+                        : "bg-surface-3 text-ink"
                     }`}
                   >
                     {m.body}
@@ -167,7 +167,7 @@ export function ChatWidget() {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close chat" : "Open chat"}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-800 text-white shadow-lg hover:bg-amber-900"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-lg hover:bg-accent-hover"
       >
         {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
       </button>
@@ -211,7 +211,7 @@ function IntakeForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex-1 space-y-3 overflow-y-auto p-4 text-sm">
-      {error && <p className="text-red-600">{error}</p>}
+      {error && <p className="text-danger-ink">{error}</p>}
 
       <div>
         <label htmlFor="serviceContext" className="mb-1 block font-medium">
@@ -220,7 +220,7 @@ function IntakeForm({
         <select
           id="serviceContext"
           name="serviceContext"
-          className="w-full rounded-md border border-neutral-300 px-2 py-1.5"
+          className="w-full rounded-md border border-line px-2 py-1.5"
         >
           {SERVICE_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -238,7 +238,7 @@ function IntakeForm({
           id="visitorName"
           name="visitorName"
           required
-          className="w-full rounded-md border border-neutral-300 px-2 py-1.5"
+          className="w-full rounded-md border border-line px-2 py-1.5"
         />
       </div>
 
@@ -251,7 +251,7 @@ function IntakeForm({
             id="contactEmail"
             name="contactEmail"
             type="email"
-            className="w-full rounded-md border border-neutral-300 px-2 py-1.5"
+            className="w-full rounded-md border border-line px-2 py-1.5"
           />
         </div>
         <div>
@@ -262,11 +262,11 @@ function IntakeForm({
             id="contactPhone"
             name="contactPhone"
             type="tel"
-            className="w-full rounded-md border border-neutral-300 px-2 py-1.5"
+            className="w-full rounded-md border border-line px-2 py-1.5"
           />
         </div>
       </div>
-      <p className="text-xs text-neutral-500">Provide at least one: email or phone.</p>
+      <p className="text-xs text-ink-faint">Provide at least one: email or phone.</p>
 
       <div>
         <label htmlFor="firstMessage" className="mb-1 block font-medium">
@@ -277,14 +277,14 @@ function IntakeForm({
           name="firstMessage"
           required
           rows={3}
-          className="w-full rounded-md border border-neutral-300 px-2 py-1.5"
+          className="w-full rounded-md border border-line px-2 py-1.5"
         />
       </div>
 
       <button
         type="submit"
         disabled={submitting}
-        className="w-full rounded-md bg-amber-800 px-3 py-2 font-medium text-white hover:bg-amber-900 disabled:opacity-50"
+        className="w-full rounded-md bg-accent px-3 py-2 font-medium text-white hover:bg-accent-hover disabled:opacity-50"
       >
         {submitting ? "Starting…" : "Start chat"}
       </button>
@@ -342,22 +342,22 @@ function MessageBox({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border-t border-neutral-200 p-3">
-      {error && <p className="mb-1 text-xs text-red-600">{error}</p>}
+    <form onSubmit={handleSubmit} className="border-t border-line p-3">
+      {error && <p className="mb-1 text-xs text-danger-ink">{error}</p>}
       {pendingAttachment && (
-        <p className="mb-1 flex items-center gap-1 text-xs text-neutral-500">
+        <p className="mb-1 flex items-center gap-1 text-xs text-ink-faint">
           <Paperclip className="h-3 w-3" /> {pendingAttachment.name}
           <button
             type="button"
             onClick={() => setPendingAttachment(null)}
-            className="ml-1 text-neutral-400 hover:text-neutral-700"
+            className="ml-1 text-ink-faint hover:text-ink-muted"
           >
             remove
           </button>
         </p>
       )}
       <div className="flex gap-2">
-        <label className="flex cursor-pointer items-center justify-center rounded-md border border-neutral-300 px-2 text-neutral-500 hover:bg-neutral-50">
+        <label className="flex cursor-pointer items-center justify-center rounded-md border border-line px-2 text-ink-faint hover:bg-surface-2">
           {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}
           <input type="file" onChange={handleFileChange} disabled={uploading} className="hidden" />
         </label>
@@ -365,12 +365,12 @@ function MessageBox({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Type a message…"
-          className="flex-1 rounded-md border border-neutral-300 px-3 py-1.5 text-sm"
+          className="flex-1 rounded-md border border-line px-3 py-1.5 text-sm"
         />
         <button
           type="submit"
           disabled={sending || uploading}
-          className="rounded-md bg-amber-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-900 disabled:opacity-50"
+          className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50"
         >
           Send
         </button>

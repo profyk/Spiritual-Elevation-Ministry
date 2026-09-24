@@ -62,15 +62,15 @@ export default function MfaEnrollPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-4">
-      <div className="w-full max-w-sm space-y-4 rounded-lg border border-neutral-200 bg-white p-6">
+    <div className="flex min-h-screen items-center justify-center bg-surface-2 px-4">
+      <div className="w-full max-w-sm space-y-4 rounded-lg border border-line bg-surface p-6">
         <h1 className="text-lg font-semibold">Set up two-factor authentication</h1>
-        <p className="text-sm text-neutral-600">
+        <p className="text-sm text-ink-muted">
           Required for your role. Scan this code with an authenticator app (Google
           Authenticator, Authy, 1Password, etc.), then enter the 6-digit code it shows.
         </p>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-danger-ink">{error}</p>}
 
         {qrCode && (
           // eslint-disable-next-line @next/next/no-img-element -- data: URI from Supabase, not an optimizable remote image
@@ -78,7 +78,7 @@ export default function MfaEnrollPage() {
         )}
 
         {secret && (
-          <p className="break-all rounded bg-neutral-100 p-2 text-center text-xs text-neutral-500">
+          <p className="break-all rounded bg-surface-3 p-2 text-center text-xs text-ink-faint">
             Can&apos;t scan it? Enter this key manually: {secret}
           </p>
         )}
@@ -93,12 +93,12 @@ export default function MfaEnrollPage() {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="6-digit code"
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-center text-sm tracking-widest"
+            className="w-full rounded-md border border-line px-3 py-2 text-center text-sm tracking-widest"
           />
           <button
             type="submit"
             disabled={submitting || !factorId}
-            className="w-full rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="w-full rounded-md bg-solid px-3 py-2 text-sm font-medium text-on-solid disabled:opacity-50"
           >
             {submitting ? "Verifying…" : "Verify & continue"}
           </button>

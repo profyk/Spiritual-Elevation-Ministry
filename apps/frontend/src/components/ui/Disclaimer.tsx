@@ -7,7 +7,7 @@ import { AlertCircle } from "lucide-react";
  */
 export function Disclaimer({ text }: { text: string }) {
   return (
-    <div className="flex gap-3 rounded-md border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+    <div className="flex gap-3 rounded-md border border-accent-line bg-accent-surface p-4 text-sm text-accent-ink">
       <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" aria-hidden="true" />
       <p>{text}</p>
     </div>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAdminSession } from "@/lib/auth/get-admin";
 import { adminApiFetchServer } from "@/lib/api-client";
 import { RequestRow } from "@/components/admin/RequestRow";
+import { isAdminOrAbove } from "@sem/shared";
 
 const STATUS_FILTERS = ["new", "in_progress", "resolved", "archived"] as const;
 
@@ -35,6 +36,7 @@ export default async function AdminRequestsPage({
         session.accessToken
       )
     : [];
+  const canDelete = isAdminOrAbove(session?.admin ?? null);
 
   return (
     <div>
@@ -47,8 +49,8 @@ export default async function AdminRequestsPage({
             href={`/admin/requests?status=${s}`}
             className={`rounded-md px-3 py-1.5 text-sm capitalize ${
               activeStatus === s
-                ? "bg-amber-800 text-white"
-                : "border border-neutral-300 text-neutral-600 hover:bg-neutral-50"
+                ? "bg-accent text-white"
+                : "border border-line text-ink-muted hover:bg-surface-2"
             }`}
           >
             {s.replace("_", " ")}
@@ -58,10 +60,10 @@ export default async function AdminRequestsPage({
 
       <div className="space-y-3">
         {requests.map((r) => (
-          <RequestRow key={r.id} request={r} />
+          <RequestRow key={r.id} request={r} canDelete={canDelete} />
         ))}
         {requests.length === 0 && (
-          <p className="text-sm text-neutral-500">No requests in this view.</p>
+          <p className="text-sm text-ink-faint">No requests in this view.</p>
         )}
       </div>
     </div>

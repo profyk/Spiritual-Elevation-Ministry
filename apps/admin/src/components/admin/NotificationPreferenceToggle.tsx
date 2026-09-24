@@ -17,7 +17,7 @@ export function NotificationPreferenceToggle({
   const [isPending, startTransition] = useTransition();
 
   return (
-    <label className="flex items-center justify-between rounded-md border border-neutral-200 px-3 py-2 text-sm">
+    <label className="flex items-center justify-between rounded-md border border-line px-3 py-2 text-sm">
       <span>{label}</span>
       <input
         type="checkbox"

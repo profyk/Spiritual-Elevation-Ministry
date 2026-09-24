@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { ThemeToggle } from "@/components/admin/ThemeToggle";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -37,16 +38,17 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-neutral-50 px-4">
+    <div className="relative flex min-h-screen flex-col items-center justify-center gap-6 bg-surface-2 px-4">
+      <ThemeToggle className="absolute right-4 top-4" />
       <Image src="/brand/logo.png" alt="Spiritual Elevation Ministry" width={112} height={112} priority />
 
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-4 rounded-lg border border-neutral-200 bg-white p-6"
+        className="w-full max-w-sm space-y-4 rounded-lg border border-line bg-surface p-6"
       >
         <h1 className="text-lg font-semibold">Admin sign in</h1>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-danger-ink">{error}</p>}
 
         <div>
           <label htmlFor="email" className="mb-1 block text-sm font-medium">
@@ -59,7 +61,7 @@ export default function AdminLoginPage() {
             autoComplete="username"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
 
@@ -75,13 +77,13 @@ export default function AdminLoginPage() {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-neutral-300 px-3 py-2 pr-10 text-sm"
+              className="w-full rounded-md border border-line px-3 py-2 pr-10 text-sm"
             />
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? "Hide password" : "Show password"}
-              className="absolute inset-y-0 right-0 flex items-center px-3 text-neutral-500 hover:text-neutral-800"
+              className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-faint hover:text-ink"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -91,7 +93,7 @@ export default function AdminLoginPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+          className="w-full rounded-md bg-solid px-3 py-2 text-sm font-medium text-on-solid disabled:opacity-50"
         >
           {submitting ? "Signing in…" : "Sign in"}
         </button>

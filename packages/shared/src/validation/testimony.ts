@@ -5,6 +5,7 @@ export const createTestimonySchema = z
     displayName: z.string().trim().max(200).optional(),
     isAnonymous: z.boolean().default(false),
     body: z.string().trim().min(10).max(5000),
+    mediaId: z.string().uuid().optional(),
   })
   .strict();
 

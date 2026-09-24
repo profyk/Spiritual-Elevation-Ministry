@@ -34,6 +34,34 @@ export async function getMediaSignedUrl(
   return signed?.signedUrl ?? null;
 }
 
+/**
+ * Cover images are the "editorial images" SPEC §33 requires alt text on —
+ * callers rendering a cover image need both the URL and the alt text the
+ * content editor collected, not just the URL like getMediaSignedUrl.
+ */
+export async function getMediaCover(
+  mediaId: string | null,
+  client: SupabaseClient = createAnonClient()
+): Promise<{ url: string; altText: string } | null> {
+  if (!mediaId) return null;
+
+  const { data: media } = await client
+    .from("media")
+    .select("bucket, storage_path, alt_text")
+    .eq("id", mediaId)
+    .maybeSingle();
+
+  if (!media) return null;
+
+  const serviceClient = createServiceRoleClient();
+  const { data: signed } = await serviceClient.storage
+    .from(media.bucket)
+    .createSignedUrl(media.storage_path, SIGNED_URL_TTL_SECONDS);
+
+  if (!signed) return null;
+  return { url: signed.signedUrl, altText: media.alt_text ?? "" };
+}
+
 export async function getMediaWithSignedUrl(
   mediaId: string | null,
   client: SupabaseClient = createAnonClient()

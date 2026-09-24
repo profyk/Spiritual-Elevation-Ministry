@@ -23,6 +23,7 @@ function parseForm(formData: FormData) {
     rsvpEnabled: formData.get("rsvpEnabled") === "on",
     capacity: formData.get("capacity") || undefined,
     coverMediaId: formData.get("coverMediaId") || null,
+    coverMediaAltText: formData.get("coverMediaAltText") || undefined,
   };
 }
 

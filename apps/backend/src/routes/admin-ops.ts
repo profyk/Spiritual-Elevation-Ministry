@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { requireAdmin } from "../middleware/auth";
 import { writeAuditLog } from "../lib/audit";
+import { createServiceRoleClient } from "../lib/supabase";
 import { canTransferConversation } from "@sem/shared";
 import type { AdminRole } from "@sem/shared";
 
@@ -27,7 +28,7 @@ adminOpsRouter.get("/dashboard-counts", requireAdmin("moderator"), async (req, r
 adminOpsRouter.get("/testimonies", requireAdmin("moderator"), async (req, res) => {
   const { data, error } = await req.userClient!
     .from("testimonies")
-    .select("id, display_name, is_anonymous, body, status, is_featured, created_at")
+    .select("id, display_name, is_anonymous, body, status, is_featured, media_id, created_at")
     .neq("status", "archived")
     .order("status", { ascending: true })
     .order("created_at", { ascending: false });
@@ -142,6 +143,37 @@ adminOpsRouter.patch("/requests/:id/status", requireAdmin("staff"), async (req, 
     entityType: "ministry_requests",
     entityId: req.params.id,
     changes: { status },
+  });
+
+  res.json({ ok: true });
+});
+
+/**
+ * SPEC §28: retention only ever archives; permanently deleting an already-
+ * archived request is a separate, explicit action — admin+ only. RLS
+ * (0004_hard_delete_archived.sql) enforces status = 'archived' as a second
+ * rail even if this check were ever bypassed.
+ */
+adminOpsRouter.delete("/requests/:id", requireAdmin("admin"), async (req, res) => {
+  const { data: request } = await req.userClient!
+    .from("ministry_requests")
+    .select("status")
+    .eq("id", req.params.id)
+    .maybeSingle();
+
+  if (!request) return res.status(404).json({ error: "Not found." });
+  if (request.status !== "archived") {
+    return res.status(400).json({ error: "Only archived requests can be permanently deleted." });
+  }
+
+  const { error } = await req.userClient!.from("ministry_requests").delete().eq("id", req.params.id);
+  if (error) return res.status(500).json({ error: error.message });
+
+  await writeAuditLog(req.userClient!, {
+    actorId: req.admin!.id,
+    action: "request.hard_delete",
+    entityType: "ministry_requests",
+    entityId: req.params.id,
   });
 
   res.json({ ok: true });
@@ -280,6 +312,57 @@ adminOpsRouter.patch("/communication/:id/status", requireAdmin("staff"), async (
     entityType: "conversations",
     entityId: req.params.id,
     changes: { status },
+  });
+
+  res.json({ ok: true });
+});
+
+/**
+ * SPEC §28: same explicit hard-delete action as requests, for archived
+ * conversations. Messages/conversation_notes cascade-delete at the DB
+ * level, but their file attachments live in Storage, not the DB — those
+ * only get cleaned up here, after the conversation itself is confirmed
+ * gone, via the service-role client (Storage RLS is deny-all).
+ */
+adminOpsRouter.delete("/communication/:id", requireAdmin("admin"), async (req, res) => {
+  const { data: conversation } = await req.userClient!
+    .from("conversations")
+    .select("status")
+    .eq("id", req.params.id)
+    .maybeSingle();
+
+  if (!conversation) return res.status(404).json({ error: "Not found." });
+  if (conversation.status !== "archived") {
+    return res.status(400).json({ error: "Only archived conversations can be permanently deleted." });
+  }
+
+  const { data: messages } = await req.userClient!
+    .from("messages")
+    .select("attachment_media_id")
+    .eq("conversation_id", req.params.id)
+    .not("attachment_media_id", "is", null);
+  const mediaIds = (messages ?? []).map((m) => m.attachment_media_id as string);
+
+  const { error } = await req.userClient!.from("conversations").delete().eq("id", req.params.id);
+  if (error) return res.status(500).json({ error: error.message });
+
+  if (mediaIds.length > 0) {
+    const serviceClient = createServiceRoleClient();
+    const { data: mediaRows } = await serviceClient
+      .from("media")
+      .select("id, bucket, storage_path")
+      .in("id", mediaIds);
+    for (const row of mediaRows ?? []) {
+      await serviceClient.storage.from(row.bucket).remove([row.storage_path]);
+    }
+    await serviceClient.from("media").delete().in("id", mediaIds);
+  }
+
+  await writeAuditLog(req.userClient!, {
+    actorId: req.admin!.id,
+    action: "conversation.hard_delete",
+    entityType: "conversations",
+    entityId: req.params.id,
   });
 
   res.json({ ok: true });

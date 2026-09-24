@@ -16,6 +16,7 @@ interface ContentItemDetail {
   status: "draft" | "scheduled" | "published" | "unpublished" | "archived";
   scheduled_for: string | null;
   cover_media_id: string | null;
+  coverMediaAltText: string | null;
   media_id: string | null;
 }
 
@@ -59,6 +60,7 @@ export default async function EditContentPage({
           status: item.status,
           scheduledFor: item.scheduled_for ? item.scheduled_for.slice(0, 16) : "",
           coverMediaId: item.cover_media_id,
+          coverMediaAltText: item.coverMediaAltText,
           mediaId: item.media_id,
         }}
       />

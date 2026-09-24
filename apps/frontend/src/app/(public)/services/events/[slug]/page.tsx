@@ -14,6 +14,7 @@ interface EventDetail {
   online_url: string | null;
   rsvp_enabled: boolean;
   coverUrl: string | null;
+  coverAlt: string;
 }
 
 async function getEvent(slug: string): Promise<EventDetail | null> {
@@ -47,10 +48,10 @@ export default async function EventDetailPage({
     <Container className="max-w-2xl py-12">
       {event.coverUrl && (
         // eslint-disable-next-line @next/next/no-img-element -- short-lived signed URL
-        <img src={event.coverUrl} alt="" className="mb-6 aspect-video w-full rounded-lg object-cover" />
+        <img src={event.coverUrl} alt={event.coverAlt} className="mb-6 aspect-video w-full rounded-lg object-cover" />
       )}
-      <h1 className="text-2xl font-semibold text-neutral-900">{event.title}</h1>
-      <p className="mt-2 text-sm text-neutral-500">
+      <h1 className="text-2xl font-semibold text-ink">{event.title}</h1>
+      <p className="mt-2 text-sm text-ink-faint">
         {new Date(event.start_at).toLocaleString(undefined, {
           dateStyle: "full",
           timeStyle: "short",
@@ -59,15 +60,15 @@ export default async function EventDetailPage({
         {event.online_url ? " · Online" : ""}
       </p>
 
-      {event.description && <p className="mt-6 text-neutral-700">{event.description}</p>}
+      {event.description && <p className="mt-6 text-ink-muted">{event.description}</p>}
 
       <div className="mt-8 flex flex-wrap gap-3">
         <WhatsAppButton context={{ service: "events", eventTitle: event.title }} />
       </div>
 
       {event.rsvp_enabled && (
-        <div className="mt-10 rounded-lg border border-neutral-200 p-6">
-          <h2 className="mb-4 text-lg font-medium text-neutral-900">RSVP</h2>
+        <div className="mt-10 rounded-lg border border-line p-6">
+          <h2 className="mb-4 text-lg font-medium text-ink">RSVP</h2>
           <EventRsvpForm eventId={event.id} />
         </div>
       )}

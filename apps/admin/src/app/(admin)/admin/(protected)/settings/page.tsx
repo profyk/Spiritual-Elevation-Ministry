@@ -4,6 +4,7 @@ import { adminApiFetchServer } from "@/lib/api-client";
 import { isAdminOrAbove } from "@sem/shared";
 import { SettingField } from "@/components/admin/SettingField";
 import { LegalPageField } from "@/components/admin/LegalPageField";
+import { BackgroundImageField } from "@/components/admin/BackgroundImageField";
 
 const SETTING_KEYS = [
   "whatsapp_number",
@@ -12,6 +13,12 @@ const SETTING_KEYS = [
   "disclaimer_prophecy",
   "disclaimer_healing",
   "disclaimer_missing_person",
+  "social_facebook",
+  "social_instagram",
+  "social_youtube",
+  "social_tiktok",
+  "social_x",
+  "site_background_media_id",
 ];
 
 export default async function AdminSettingsPage() {
@@ -30,6 +37,13 @@ export default async function AdminSettingsPage() {
       body: "",
     })),
   ]);
+
+  const backgroundMediaId = settings.site_background_media_id ?? "";
+  const backgroundPreviewUrl = backgroundMediaId
+    ? await adminApiFetchServer<{ url: string }>(`/media/${backgroundMediaId}/signed-url`, session!.accessToken)
+        .then((r) => r.url)
+        .catch(() => null)
+    : null;
 
   return (
     <div className="max-w-2xl space-y-10">
@@ -54,8 +68,43 @@ export default async function AdminSettingsPage() {
       </section>
 
       <section>
+        <h2 className="mb-4 text-lg font-medium">Appearance</h2>
+        <BackgroundImageField initialMediaId={backgroundMediaId} initialPreviewUrl={backgroundPreviewUrl} />
+      </section>
+
+      <section>
+        <h2 className="mb-4 text-lg font-medium">Social Media</h2>
+        <p className="mb-4 text-xs text-ink-faint">
+          Leave a field blank to hide that icon from the site footer.
+        </p>
+        <div className="space-y-4">
+          <SettingField
+            settingKey="social_facebook"
+            label="Facebook URL"
+            initialValue={settings.social_facebook ?? ""}
+          />
+          <SettingField
+            settingKey="social_instagram"
+            label="Instagram URL"
+            initialValue={settings.social_instagram ?? ""}
+          />
+          <SettingField
+            settingKey="social_youtube"
+            label="YouTube URL"
+            initialValue={settings.social_youtube ?? ""}
+          />
+          <SettingField
+            settingKey="social_tiktok"
+            label="TikTok URL"
+            initialValue={settings.social_tiktok ?? ""}
+          />
+          <SettingField settingKey="social_x" label="X (Twitter) URL" initialValue={settings.social_x ?? ""} />
+        </div>
+      </section>
+
+      <section>
         <h2 className="mb-4 text-lg font-medium">Required Disclaimers</h2>
-        <p className="mb-4 text-xs text-neutral-500">
+        <p className="mb-4 text-xs text-ink-faint">
           Editable by Admin+. Only Super Admin can remove a disclaimer&apos;s required status
           (SPEC §37) — not yet exposed in this UI, so these always stay required for now.
         </p>
@@ -96,7 +145,7 @@ export default async function AdminSettingsPage() {
           label="Retention period (months)"
           initialValue={settings.data_retention_months ?? "24"}
         />
-        <p className="mt-2 text-xs text-neutral-500">
+        <p className="mt-2 text-xs text-ink-faint">
           A daily job (.github/workflows/cron.yml) archives conversations/requests past this
           period — it only archives, never deletes (SPEC §28).
         </p>

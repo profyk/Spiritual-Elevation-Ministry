@@ -43,7 +43,7 @@ export function EventRsvpForm({ eventId }: { eventId: string }) {
 
   if (status === "success") {
     return (
-      <div className="rounded-md border border-green-200 bg-green-50 p-4 text-sm text-green-900">
+      <div className="rounded-md border border-success-line bg-success-surface p-4 text-sm text-success-ink">
         You&apos;re RSVP&apos;d. We look forward to seeing you.
       </div>
     );
@@ -51,7 +51,7 @@ export function EventRsvpForm({ eventId }: { eventId: string }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
+      {errorMessage && <p className="text-sm text-danger-ink">{errorMessage}</p>}
 
       <div>
         <label htmlFor="rsvp-name" className="mb-1 block text-sm font-medium">
@@ -61,7 +61,7 @@ export function EventRsvpForm({ eventId }: { eventId: string }) {
           id="rsvp-name"
           name="name"
           required
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
@@ -74,7 +74,7 @@ export function EventRsvpForm({ eventId }: { eventId: string }) {
             id="rsvp-email"
             name="contactEmail"
             type="email"
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -85,11 +85,11 @@ export function EventRsvpForm({ eventId }: { eventId: string }) {
             id="rsvp-phone"
             name="contactPhone"
             type="tel"
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
       </div>
-      <p className="text-xs text-neutral-500">Provide at least one: email or phone.</p>
+      <p className="text-xs text-ink-faint">Provide at least one: email or phone.</p>
 
       <div>
         <label htmlFor="rsvp-attendees" className="mb-1 block text-sm font-medium">
@@ -102,14 +102,14 @@ export function EventRsvpForm({ eventId }: { eventId: string }) {
           min={1}
           max={20}
           defaultValue={1}
-          className="w-24 rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-24 rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="rounded-md bg-amber-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-amber-900 disabled:opacity-50"
+        className="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50"
       >
         {status === "submitting" ? "Submitting…" : "RSVP"}
       </button>

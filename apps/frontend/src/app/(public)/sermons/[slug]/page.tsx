@@ -10,6 +10,7 @@ interface ContentDetail {
   content_type: string;
   published_at: string | null;
   coverUrl: string | null;
+  coverAlt: string;
   media: { url: string; mimeType: string } | null;
 }
 
@@ -47,15 +48,15 @@ export default async function ContentDetailPage({
     <Container className="max-w-2xl py-12">
       {item.coverUrl && (
         // eslint-disable-next-line @next/next/no-img-element -- short-lived signed URL
-        <img src={item.coverUrl} alt="" className="mb-6 aspect-video w-full rounded-lg object-cover" />
+        <img src={item.coverUrl} alt={item.coverAlt} className="mb-6 aspect-video w-full rounded-lg object-cover" />
       )}
 
-      <p className="text-xs uppercase tracking-wide text-neutral-400">
+      <p className="text-xs uppercase tracking-wide text-ink-faint">
         {item.content_type.replace("_", " ")}
       </p>
-      <h1 className="mt-1 text-2xl font-semibold text-neutral-900">{item.title}</h1>
+      <h1 className="mt-1 text-2xl font-semibold text-ink">{item.title}</h1>
       {item.published_at && (
-        <p className="mt-1 text-xs text-neutral-400">
+        <p className="mt-1 text-xs text-ink-faint">
           {new Date(item.published_at).toLocaleDateString()}
         </p>
       )}
@@ -74,7 +75,7 @@ export default async function ContentDetailPage({
         </video>
       )}
 
-      <div className="prose prose-neutral mt-6 max-w-none whitespace-pre-wrap text-neutral-700">
+      <div className="prose prose-neutral mt-6 max-w-none whitespace-pre-wrap text-ink-muted">
         {item.body}
       </div>
     </Container>

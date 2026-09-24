@@ -34,13 +34,13 @@ export function SettingField({
           rows={3}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       ) : (
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       )}
       <div className="mt-1 flex items-center gap-2">
@@ -48,11 +48,11 @@ export function SettingField({
           type="button"
           disabled={isPending}
           onClick={handleSave}
-          className="rounded-md bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50"
+          className="rounded-md bg-solid px-3 py-1.5 text-xs font-medium text-on-solid disabled:opacity-50"
         >
           {isPending ? "Saving…" : "Save"}
         </button>
-        {saved && <span className="text-xs text-green-700">Saved</span>}
+        {saved && <span className="text-xs text-success-ink">Saved</span>}
       </div>
     </div>
   );

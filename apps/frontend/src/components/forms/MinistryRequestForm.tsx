@@ -51,7 +51,7 @@ export function MinistryRequestForm({
 
   if (status === "success") {
     return (
-      <div className="rounded-md border border-green-200 bg-green-50 p-4 text-sm text-green-900">
+      <div className="rounded-md border border-success-line bg-success-surface p-4 text-sm text-success-ink">
         Thank you — your request has been received. Someone from the ministry will be in touch.
       </div>
     );
@@ -59,7 +59,7 @@ export function MinistryRequestForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
+      {errorMessage && <p className="text-sm text-danger-ink">{errorMessage}</p>}
 
       <div>
         <label htmlFor="name" className="mb-1 block text-sm font-medium">
@@ -70,7 +70,7 @@ export function MinistryRequestForm({
           name="name"
           required
           maxLength={200}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
@@ -83,7 +83,7 @@ export function MinistryRequestForm({
             id="contactEmail"
             name="contactEmail"
             type="email"
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -94,11 +94,11 @@ export function MinistryRequestForm({
             id="contactPhone"
             name="contactPhone"
             type="tel"
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
       </div>
-      <p className="text-xs text-neutral-500">Provide at least one: email or phone.</p>
+      <p className="text-xs text-ink-faint">Provide at least one: email or phone.</p>
 
       <div>
         <label htmlFor="details" className="mb-1 block text-sm font-medium">
@@ -109,12 +109,12 @@ export function MinistryRequestForm({
           name="details"
           rows={4}
           maxLength={5000}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
       {showMissingPersonOption && (
-        <label className="flex items-start gap-2 text-sm text-neutral-700">
+        <label className="flex items-start gap-2 text-sm text-ink-muted">
           <input type="checkbox" name="concernsMissingPerson" className="mt-0.5" />
           This concerns a missing loved one
         </label>
@@ -123,7 +123,7 @@ export function MinistryRequestForm({
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="rounded-md bg-amber-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-amber-900 disabled:opacity-50"
+        className="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50"
       >
         {status === "submitting" ? "Sending…" : "Send"}
       </button>

@@ -1,9 +1,25 @@
 import { Router } from "express";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireAdmin } from "../middleware/auth";
 import { writeAuditLog } from "../lib/audit";
 import { contentItemSchema, eventSchema, coachingProgramSchema } from "@sem/shared";
 
 export const adminContentRouter = Router();
+
+/**
+ * Alt text (SPEC §33) lives on the media row, not the content/event row
+ * that references it — the schema's .refine() already guarantees it's
+ * present whenever coverMediaId is, so this only runs when there's
+ * something to write.
+ */
+async function setCoverAltText(
+  client: SupabaseClient,
+  coverMediaId: string | null | undefined,
+  altText: string | undefined
+): Promise<void> {
+  if (!coverMediaId || !altText) return;
+  await client.from("media").update({ alt_text: altText }).eq("id", coverMediaId);
+}
 
 // ── Content (prophetic messages, sermons, articles) — staff+ writes,
 // moderator+ reads (SPEC §21 "content review") ──────────────────────────
@@ -21,12 +37,13 @@ adminContentRouter.get("/content/:id", requireAdmin("moderator"), async (req, re
   const { data, error } = await req.userClient!
     .from("content_items")
     .select(
-      "content_type, title, slug, summary, body, category, tags, status, scheduled_for, cover_media_id, media_id"
+      "content_type, title, slug, summary, body, category, tags, status, scheduled_for, cover_media_id, media_id, cover:cover_media_id(alt_text)"
     )
     .eq("id", req.params.id)
     .maybeSingle();
   if (error || !data) return res.status(404).json({ error: "Not found." });
-  res.json(data);
+  const { cover, ...item } = data as typeof data & { cover: { alt_text: string | null } | null };
+  res.json({ ...item, coverMediaAltText: cover?.alt_text ?? null });
 });
 
 adminContentRouter.post("/content", requireAdmin("staff"), async (req, res) => {
@@ -54,6 +71,8 @@ adminContentRouter.post("/content", requireAdmin("staff"), async (req, res) => {
     .single();
 
   if (error) return res.status(500).json({ error: error.message });
+
+  await setCoverAltText(req.userClient!, parsed.data.coverMediaId, parsed.data.coverMediaAltText);
 
   await writeAuditLog(req.userClient!, {
     actorId: req.admin!.id,
@@ -97,6 +116,8 @@ adminContentRouter.patch("/content/:id", requireAdmin("staff"), async (req, res)
 
   if (error) return res.status(500).json({ error: error.message });
 
+  await setCoverAltText(req.userClient!, parsed.data.coverMediaId, parsed.data.coverMediaAltText);
+
   await writeAuditLog(req.userClient!, {
     actorId: req.admin!.id,
     action: "content.update",
@@ -123,12 +144,13 @@ adminContentRouter.get("/events/:id", requireAdmin("staff"), async (req, res) =>
   const { data, error } = await req.userClient!
     .from("events")
     .select(
-      "title, slug, description, start_at, end_at, location_type, location_address, online_url, status, rsvp_enabled, capacity, cover_media_id"
+      "title, slug, description, start_at, end_at, location_type, location_address, online_url, status, rsvp_enabled, capacity, cover_media_id, cover:cover_media_id(alt_text)"
     )
     .eq("id", req.params.id)
     .maybeSingle();
   if (error || !data) return res.status(404).json({ error: "Not found." });
-  res.json(data);
+  const { cover, ...event } = data as typeof data & { cover: { alt_text: string | null } | null };
+  res.json({ ...event, coverMediaAltText: cover?.alt_text ?? null });
 });
 
 adminContentRouter.post("/events", requireAdmin("staff"), async (req, res) => {
@@ -155,6 +177,8 @@ adminContentRouter.post("/events", requireAdmin("staff"), async (req, res) => {
     .single();
 
   if (error) return res.status(500).json({ error: error.message });
+
+  await setCoverAltText(req.userClient!, parsed.data.coverMediaId, parsed.data.coverMediaAltText);
 
   await writeAuditLog(req.userClient!, {
     actorId: req.admin!.id,
@@ -190,6 +214,8 @@ adminContentRouter.patch("/events/:id", requireAdmin("staff"), async (req, res) 
 
   if (error) return res.status(500).json({ error: error.message });
 
+  await setCoverAltText(req.userClient!, parsed.data.coverMediaId, parsed.data.coverMediaAltText);
+
   await writeAuditLog(req.userClient!, {
     actorId: req.admin!.id,
     action: "event.update",
@@ -198,6 +224,16 @@ adminContentRouter.patch("/events/:id", requireAdmin("staff"), async (req, res) 
   });
 
   res.json({ ok: true });
+});
+
+adminContentRouter.get("/events/:id/rsvps", requireAdmin("staff"), async (req, res) => {
+  const { data, error } = await req.userClient!
+    .from("event_rsvps")
+    .select("id, name, contact_email, contact_phone, attendee_count, created_at")
+    .eq("event_id", req.params.id)
+    .order("created_at", { ascending: false });
+  if (error) return res.status(500).json({ error: "Query failed." });
+  res.json(data ?? []);
 });
 
 // ── Coaching programs — staff+ only ──────────────────────────────────────

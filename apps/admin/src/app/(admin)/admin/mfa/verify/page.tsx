@@ -58,14 +58,14 @@ export default function MfaVerifyPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-surface-2 px-4">
       <form
         onSubmit={handleVerify}
-        className="w-full max-w-sm space-y-4 rounded-lg border border-neutral-200 bg-white p-6"
+        className="w-full max-w-sm space-y-4 rounded-lg border border-line bg-surface p-6"
       >
         <h1 className="text-lg font-semibold">Enter your authentication code</h1>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-danger-ink">{error}</p>}
 
         <input
           type="text"
@@ -76,12 +76,12 @@ export default function MfaVerifyPage() {
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="6-digit code"
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-center text-sm tracking-widest"
+          className="w-full rounded-md border border-line px-3 py-2 text-center text-sm tracking-widest"
         />
         <button
           type="submit"
           disabled={submitting || !factorId}
-          className="w-full rounded-md bg-neutral-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+          className="w-full rounded-md bg-solid px-3 py-2 text-sm font-medium text-on-solid disabled:opacity-50"
         >
           {submitting ? "Verifying…" : "Verify"}
         </button>

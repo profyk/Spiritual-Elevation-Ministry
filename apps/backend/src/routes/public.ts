@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createAnonClient } from "../lib/supabase";
-import { getMediaSignedUrl, getMediaWithSignedUrl } from "../lib/media-storage";
+import { getMediaWithSignedUrl, getMediaCover } from "../lib/media-storage";
 
 export const publicRouter = Router();
 
@@ -21,10 +21,10 @@ publicRouter.get("/content", async (req, res) => {
   if (error) return res.status(500).json({ error: "Query failed." });
 
   const items = await Promise.all(
-    (data ?? []).map(async (item) => ({
-      ...item,
-      coverUrl: await getMediaSignedUrl(item.cover_media_id),
-    }))
+    (data ?? []).map(async (item) => {
+      const cover = await getMediaCover(item.cover_media_id);
+      return { ...item, coverUrl: cover?.url ?? null, coverAlt: cover?.altText ?? "" };
+    })
   );
   res.json(items);
 });
@@ -40,12 +40,12 @@ publicRouter.get("/content/:slug", async (req, res) => {
 
   if (error || !item) return res.status(404).json({ error: "Not found." });
 
-  const [coverUrl, media] = await Promise.all([
-    getMediaSignedUrl(item.cover_media_id),
+  const [cover, media] = await Promise.all([
+    getMediaCover(item.cover_media_id),
     getMediaWithSignedUrl(item.media_id),
   ]);
 
-  res.json({ ...item, coverUrl, media });
+  res.json({ ...item, coverUrl: cover?.url ?? null, coverAlt: cover?.altText ?? "", media });
 });
 
 // ── Events ───────────────────────────────────────────────────────────────
@@ -66,10 +66,10 @@ publicRouter.get("/events", async (req, res) => {
   if (error) return res.status(500).json({ error: "Query failed." });
 
   const events = await Promise.all(
-    (data ?? []).map(async (event) => ({
-      ...event,
-      coverUrl: await getMediaSignedUrl(event.cover_media_id),
-    }))
+    (data ?? []).map(async (event) => {
+      const cover = await getMediaCover(event.cover_media_id);
+      return { ...event, coverUrl: cover?.url ?? null, coverAlt: cover?.altText ?? "" };
+    })
   );
   res.json(events);
 });
@@ -87,8 +87,8 @@ publicRouter.get("/events/:slug", async (req, res) => {
 
   if (error || !event) return res.status(404).json({ error: "Not found." });
 
-  const coverUrl = await getMediaSignedUrl(event.cover_media_id);
-  res.json({ ...event, coverUrl });
+  const cover = await getMediaCover(event.cover_media_id);
+  res.json({ ...event, coverUrl: cover?.url ?? null, coverAlt: cover?.altText ?? "" });
 });
 
 // ── Coaching programs ────────────────────────────────────────────────────
@@ -111,7 +111,7 @@ publicRouter.get("/testimonies", async (_req, res) => {
   const supabase = createAnonClient();
   const { data, error } = await supabase
     .from("testimonies")
-    .select("id, display_name, is_anonymous, body, is_featured, created_at")
+    .select("id, display_name, is_anonymous, body, is_featured, media_id, created_at")
     .eq("status", "approved")
     .order("is_featured", { ascending: false })
     .order("created_at", { ascending: false });

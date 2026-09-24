@@ -28,9 +28,9 @@ export default async function CoachingPage() {
 
   return (
     <Container className="max-w-3xl py-12">
-      <Compass className="h-8 w-8 text-amber-800" aria-hidden="true" />
-      <h1 className="mt-4 text-2xl font-semibold text-neutral-900">Life &amp; Spiritual Coaching</h1>
-      <p className="mt-3 text-neutral-600">
+      <Compass className="h-8 w-8 text-accent-ink" aria-hidden="true" />
+      <h1 className="mt-4 text-2xl font-semibold text-ink">Life &amp; Spiritual Coaching</h1>
+      <p className="mt-3 text-ink-muted">
         [SAMPLE] Placeholder description. Payment for coaching programs is arranged directly
         with the ministry (WhatsApp, bank transfer, etc.) after you enroll below — there is no
         online payment yet.
@@ -38,17 +38,17 @@ export default async function CoachingPage() {
 
       <div className="mt-8 space-y-4">
         {programs.length === 0 && (
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-ink-faint">
             No coaching programs are published yet. Check back soon.
           </p>
         )}
         {programs.map((program) => (
-          <div key={program.id} className="rounded-lg border border-neutral-200 p-5">
-            <h2 className="font-medium text-neutral-900">{program.title}</h2>
+          <div key={program.id} className="rounded-lg border border-line p-5">
+            <h2 className="font-medium text-ink">{program.title}</h2>
             {program.description && (
-              <p className="mt-1 text-sm text-neutral-600">{program.description}</p>
+              <p className="mt-1 text-sm text-ink-muted">{program.description}</p>
             )}
-            <p className="mt-2 text-sm text-neutral-500">
+            <p className="mt-2 text-sm text-ink-faint">
               {[program.format, program.duration].filter(Boolean).join(" · ")}
               {program.price_amount ? ` · ${program.price_currency} ${program.price_amount}` : ""}
             </p>
@@ -56,8 +56,8 @@ export default async function CoachingPage() {
         ))}
       </div>
 
-      <div className="mt-10 rounded-lg border border-neutral-200 p-6">
-        <h2 className="mb-4 text-lg font-medium text-neutral-900">Enrollment Interest</h2>
+      <div className="mt-10 rounded-lg border border-line p-6">
+        <h2 className="mb-4 text-lg font-medium text-ink">Enrollment Interest</h2>
         <MinistryRequestForm requestType="coaching_interest" />
       </div>
     </Container>

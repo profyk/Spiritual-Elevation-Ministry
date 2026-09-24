@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <Container className="max-w-2xl py-12">
-      <h1 className="text-2xl font-semibold text-neutral-900">Talk to the Ministry</h1>
-      <p className="mt-3 text-neutral-600">
+      <h1 className="text-2xl font-semibold text-ink">Talk to the Ministry</h1>
+      <p className="mt-3 text-ink-muted">
         Reach out for prayer, questions, or anything else. Use the chat button in the bottom
         corner for a live conversation, send a message below, or reach us on WhatsApp.
       </p>
@@ -21,7 +21,7 @@ export default function ContactPage() {
         <WhatsAppButton context={{ service: "general" }} />
       </div>
 
-      <div className="mt-10 rounded-lg border border-neutral-200 p-6">
+      <div className="mt-10 rounded-lg border border-line p-6">
         <MinistryRequestForm requestType="general_contact" showMissingPersonOption />
       </div>
     </Container>

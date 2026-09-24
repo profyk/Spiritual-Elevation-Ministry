@@ -25,9 +25,9 @@ export default async function HealingDeliverancePage() {
 
   return (
     <Container className="max-w-3xl py-12">
-      <HeartHandshake className="h-8 w-8 text-amber-800" aria-hidden="true" />
-      <h1 className="mt-4 text-2xl font-semibold text-neutral-900">Healing &amp; Deliverance</h1>
-      <p className="mt-3 text-neutral-600">
+      <HeartHandshake className="h-8 w-8 text-accent-ink" aria-hidden="true" />
+      <h1 className="mt-4 text-2xl font-semibold text-ink">Healing &amp; Deliverance</h1>
+      <p className="mt-3 text-ink-muted">
         [SAMPLE] Placeholder description of the ministry&apos;s healing &amp; deliverance
         offering. Replace with real content from Admin before launch.
       </p>
@@ -41,8 +41,8 @@ export default async function HealingDeliverancePage() {
         <WhatsAppButton context={{ service: "healing-deliverance" }} />
       </div>
 
-      <div className="mt-10 rounded-lg border border-neutral-200 p-6">
-        <h2 className="mb-4 text-lg font-medium text-neutral-900">
+      <div className="mt-10 rounded-lg border border-line p-6">
+        <h2 className="mb-4 text-lg font-medium text-ink">
           Request Healing &amp; Deliverance Prayer
         </h2>
         <MinistryRequestForm requestType="healing_deliverance" showMissingPersonOption />

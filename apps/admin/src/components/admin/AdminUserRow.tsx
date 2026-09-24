@@ -15,9 +15,9 @@ export function AdminUserRow({ user, isSelf }: { user: AdminUserRowData; isSelf:
   const [isPending, startTransition] = useTransition();
 
   return (
-    <tr className="border-b border-neutral-100 last:border-0">
+    <tr className="border-b border-line-faint last:border-0">
       <td className="px-4 py-2">
-        {user.full_name} {isSelf && <span className="text-xs text-neutral-400">(you)</span>}
+        {user.full_name} {isSelf && <span className="text-xs text-ink-faint">(you)</span>}
       </td>
       <td className="px-4 py-2">
         <select
@@ -26,7 +26,7 @@ export function AdminUserRow({ user, isSelf }: { user: AdminUserRowData; isSelf:
           onChange={(e) =>
             startTransition(() => setAdminRole(user.id, e.target.value as AdminRole))
           }
-          className="rounded-md border border-neutral-300 px-2 py-1 text-xs disabled:opacity-50"
+          className="rounded-md border border-line px-2 py-1 text-xs disabled:opacity-50"
         >
           <option value="moderator">Moderator</option>
           <option value="staff">Staff</option>
@@ -38,7 +38,7 @@ export function AdminUserRow({ user, isSelf }: { user: AdminUserRowData; isSelf:
         <button
           disabled={isPending || isSelf}
           onClick={() => startTransition(() => setAdminActive(user.id, !user.is_active))}
-          className="rounded-md border border-neutral-300 px-3 py-1 text-xs disabled:opacity-50"
+          className="rounded-md border border-line px-3 py-1 text-xs disabled:opacity-50"
         >
           {user.is_active ? "Deactivate" : "Activate"}
         </button>

@@ -9,6 +9,7 @@ export type WhatsAppContext =
   | { service: "healing-deliverance" }
   | { service: "coaching"; programTitle?: string }
   | { service: "events"; eventTitle?: string }
+  | { service: "give" }
   | { service: "general" };
 
 const CONTEXT_MESSAGES: Record<WhatsAppContext["service"], (ctx: WhatsAppContext) => string> = {
@@ -24,6 +25,7 @@ const CONTEXT_MESSAGES: Record<WhatsAppContext["service"], (ctx: WhatsAppContext
     ctx.service === "events" && ctx.eventTitle
       ? `Hi, I'd like more information about "${ctx.eventTitle}".`
       : "Hi, I'd like more information about your upcoming events.",
+  give: () => "Hi, I'd like to know how I can give/support the ministry.",
   general: () => "Hi, I'd like to get in touch with the ministry.",
 };
 

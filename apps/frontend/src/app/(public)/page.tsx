@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Flame, HeartHandshake, Compass, CalendarDays } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { LinkButton } from "@/components/ui/Button";
@@ -48,15 +49,23 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="bg-amber-50">
+      <section className="bg-accent-surface">
         <Container className="flex flex-col items-start gap-6 py-16">
-          <p className="text-xs font-medium uppercase tracking-wide text-amber-800">
+          <Image
+            src="/brand/logo.png"
+            alt="Spiritual Elevation Ministry"
+            width={120}
+            height={120}
+            priority
+            className="drop-shadow-sm"
+          />
+          <p className="text-xs font-medium uppercase tracking-wide text-accent-ink">
             [SAMPLE] Placeholder hero content — replace before launch
           </p>
-          <h1 className="max-w-2xl text-3xl font-semibold text-neutral-900 sm:text-4xl">
+          <h1 className="max-w-2xl text-3xl font-semibold text-ink sm:text-4xl">
             Spiritual Elevation Ministry
           </h1>
-          <p className="max-w-xl text-neutral-600">
+          <p className="max-w-xl text-ink-muted">
             A ministry offering prophetic ministry, healing &amp; deliverance prayer, spiritual
             coaching, and events. Reach out below — we&apos;d love to connect with you.
           </p>
@@ -68,18 +77,18 @@ export default async function HomePage() {
       </section>
 
       <Container className="py-16">
-        <h2 className="mb-8 text-xl font-semibold text-neutral-900">Our Services</h2>
+        <h2 className="mb-8 text-xl font-semibold text-ink">Our Services</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {SERVICES.map(({ href, title, description, Icon }) => (
             <a
               key={href}
               href={href}
-              className="flex gap-4 rounded-lg border border-neutral-200 p-5 transition-colors hover:border-amber-800"
+              className="flex gap-4 rounded-lg border border-line p-5 transition-colors hover:border-accent-line"
             >
-              <Icon className="h-6 w-6 flex-shrink-0 text-amber-800" aria-hidden="true" />
+              <Icon className="h-6 w-6 flex-shrink-0 text-accent-ink" aria-hidden="true" />
               <div>
-                <h3 className="font-medium text-neutral-900">{title}</h3>
-                <p className="mt-1 text-sm text-neutral-600">{description}</p>
+                <h3 className="font-medium text-ink">{title}</h3>
+                <p className="mt-1 text-sm text-ink-muted">{description}</p>
               </div>
             </a>
           ))}
@@ -88,7 +97,7 @@ export default async function HomePage() {
 
       {recentContent.length > 0 && (
         <Container className="pb-16">
-          <h2 className="mb-8 text-xl font-semibold text-neutral-900">
+          <h2 className="mb-8 text-xl font-semibold text-ink">
             Recent Messages &amp; Teachings
           </h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
@@ -96,14 +105,14 @@ export default async function HomePage() {
               <a
                 key={item.id}
                 href={`/sermons/${item.slug}`}
-                className="rounded-lg border border-neutral-200 p-5 hover:border-amber-800"
+                className="rounded-lg border border-line p-5 hover:border-accent-line"
               >
-                <p className="text-xs uppercase tracking-wide text-neutral-400">
+                <p className="text-xs uppercase tracking-wide text-ink-faint">
                   {item.content_type.replace("_", " ")}
                 </p>
-                <h3 className="mt-1 font-medium text-neutral-900">{item.title}</h3>
+                <h3 className="mt-1 font-medium text-ink">{item.title}</h3>
                 {item.summary && (
-                  <p className="mt-1 text-sm text-neutral-600 line-clamp-2">{item.summary}</p>
+                  <p className="mt-1 text-sm text-ink-muted line-clamp-2">{item.summary}</p>
                 )}
               </a>
             ))}

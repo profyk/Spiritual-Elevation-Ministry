@@ -31,13 +31,13 @@ export function NewAdminUserForm() {
 
   if (created) {
     return (
-      <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-sm">
-        <p className="font-medium text-green-900">Account created for {created.email}</p>
-        <p className="mt-2 text-green-800">
+      <div className="mb-6 rounded-lg border border-success-line bg-success-surface p-4 text-sm">
+        <p className="font-medium text-success-ink">Account created for {created.email}</p>
+        <p className="mt-2 text-success-ink">
           Temporary password — shown once, share it with them securely (not over email/Slack in
           plain text):
         </p>
-        <code className="mt-1 block break-all rounded bg-white px-3 py-2 font-mono text-xs text-neutral-900">
+        <code className="mt-1 block break-all rounded bg-surface px-3 py-2 font-mono text-xs text-ink">
           {created.tempPassword}
         </code>
         <button
@@ -46,7 +46,7 @@ export function NewAdminUserForm() {
             setCreated(null);
             setOpen(false);
           }}
-          className="mt-3 rounded-md border border-green-300 px-3 py-1.5 text-xs font-medium text-green-900 hover:bg-green-100"
+          className="mt-3 rounded-md border border-success-line px-3 py-1.5 text-xs font-medium text-success-ink hover:bg-success-surface"
         >
           Done
         </button>
@@ -59,7 +59,7 @@ export function NewAdminUserForm() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="mb-6 rounded-md bg-amber-800 px-4 py-2 text-sm font-medium text-white hover:bg-amber-900"
+        className="mb-6 rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover"
       >
         New admin
       </button>
@@ -67,8 +67,8 @@ export function NewAdminUserForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6 max-w-md space-y-3 rounded-lg border border-neutral-200 bg-white p-4">
-      {error && <p className="text-sm text-red-600">{error}</p>}
+    <form onSubmit={handleSubmit} className="mb-6 max-w-md space-y-3 rounded-lg border border-line bg-surface p-4">
+      {error && <p className="text-sm text-danger-ink">{error}</p>}
 
       <div>
         <label htmlFor="new-admin-email" className="mb-1 block text-sm font-medium">
@@ -80,7 +80,7 @@ export function NewAdminUserForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
@@ -93,7 +93,7 @@ export function NewAdminUserForm() {
           required
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
@@ -105,7 +105,7 @@ export function NewAdminUserForm() {
           id="new-admin-role"
           value={role}
           onChange={(e) => setRole(e.target.value as AdminRole)}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         >
           <option value="moderator">Moderator</option>
           <option value="staff">Staff</option>
@@ -118,14 +118,14 @@ export function NewAdminUserForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-md bg-amber-800 px-4 py-2 text-sm font-medium text-white hover:bg-amber-900 disabled:opacity-50"
+          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50"
         >
           {isPending ? "Creating…" : "Create account"}
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="rounded-md border border-neutral-300 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+          className="rounded-md border border-line px-4 py-2 text-sm text-ink-muted hover:bg-surface-2"
         >
           Cancel
         </button>

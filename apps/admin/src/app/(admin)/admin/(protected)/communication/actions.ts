@@ -3,11 +3,17 @@
 import { revalidatePath } from "next/cache";
 import { getAdminSession } from "@/lib/auth/get-admin";
 import { adminApiFetchServer } from "@/lib/api-client";
-import { isStaffOrAbove } from "@sem/shared";
+import { isStaffOrAbove, isAdminOrAbove } from "@sem/shared";
 
 async function requireStaffSession() {
   const session = await getAdminSession();
   if (!isStaffOrAbove(session?.admin ?? null)) throw new Error("Not authorized.");
+  return session!;
+}
+
+async function requireAdminSession() {
+  const session = await getAdminSession();
+  if (!isAdminOrAbove(session?.admin ?? null)) throw new Error("Not authorized.");
   return session!;
 }
 
@@ -72,5 +78,14 @@ export async function setConversationStatus(
     body: JSON.stringify({ status }),
   });
   revalidatePath(`/admin/communication/${conversationId}`);
+  revalidatePath("/admin/communication");
+}
+
+/** SPEC §28: permanent, admin+ only, and only ever on an already-archived conversation. */
+export async function deleteConversation(conversationId: string) {
+  const session = await requireAdminSession();
+  await adminApiFetchServer(`/admin/communication/${conversationId}`, session.accessToken, {
+    method: "DELETE",
+  });
   revalidatePath("/admin/communication");
 }

@@ -34,18 +34,18 @@ export function ConversationNotes({
   }
 
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-4">
+    <div className="rounded-lg border border-line bg-surface p-4">
       <h2 className="mb-1 text-sm font-medium">Internal notes</h2>
-      <p className="mb-3 text-xs text-neutral-400">Never visible to the visitor.</p>
+      <p className="mb-3 text-xs text-ink-faint">Never visible to the visitor.</p>
 
       <div className="mb-3 space-y-2">
         {initialNotes.map((note) => (
-          <div key={note.id} className="rounded-md bg-amber-50 p-2 text-xs text-amber-900">
+          <div key={note.id} className="rounded-md bg-accent-surface p-2 text-xs text-accent-ink">
             <p>{note.body}</p>
-            <p className="mt-1 text-amber-600">{new Date(note.created_at).toLocaleString()}</p>
+            <p className="mt-1 text-accent-ink">{new Date(note.created_at).toLocaleString()}</p>
           </div>
         ))}
-        {initialNotes.length === 0 && <p className="text-xs text-neutral-400">No notes yet.</p>}
+        {initialNotes.length === 0 && <p className="text-xs text-ink-faint">No notes yet.</p>}
       </div>
 
       <form onSubmit={handleSubmit} className="flex gap-2">
@@ -53,12 +53,12 @@ export function ConversationNotes({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Add a note…"
-          className="flex-1 rounded-md border border-neutral-300 px-2 py-1.5 text-xs"
+          className="flex-1 rounded-md border border-line px-2 py-1.5 text-xs"
         />
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-md border border-neutral-300 px-3 py-1.5 text-xs font-medium hover:bg-neutral-50 disabled:opacity-50"
+          className="rounded-md border border-line px-3 py-1.5 text-xs font-medium hover:bg-surface-2 disabled:opacity-50"
         >
           Add
         </button>

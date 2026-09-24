@@ -61,7 +61,7 @@ export function CoachingProgramForm({
             const title = e.target.value;
             setValues((v) => ({ ...v, title, slug: slugTouched ? v.slug : slugify(title) }));
           }}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
@@ -78,7 +78,7 @@ export function CoachingProgramForm({
             setSlugTouched(true);
             setValues((v) => ({ ...v, slug: e.target.value }));
           }}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm font-mono text-xs"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm font-mono text-xs"
         />
       </div>
 
@@ -92,7 +92,7 @@ export function CoachingProgramForm({
           rows={4}
           value={values.description}
           onChange={(e) => setValues((v) => ({ ...v, description: e.target.value }))}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
@@ -107,7 +107,7 @@ export function CoachingProgramForm({
             placeholder="1:1, group, ..."
             value={values.format}
             onChange={(e) => setValues((v) => ({ ...v, format: e.target.value }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -120,7 +120,7 @@ export function CoachingProgramForm({
             placeholder="6 weeks"
             value={values.duration}
             onChange={(e) => setValues((v) => ({ ...v, duration: e.target.value }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
       </div>
@@ -138,7 +138,7 @@ export function CoachingProgramForm({
             step="0.01"
             value={values.priceAmount}
             onChange={(e) => setValues((v) => ({ ...v, priceAmount: e.target.value }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -151,7 +151,7 @@ export function CoachingProgramForm({
             maxLength={3}
             value={values.priceCurrency}
             onChange={(e) => setValues((v) => ({ ...v, priceCurrency: e.target.value.toUpperCase() }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -165,7 +165,7 @@ export function CoachingProgramForm({
             min={1}
             value={values.capacity}
             onChange={(e) => setValues((v) => ({ ...v, capacity: e.target.value }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
       </div>
@@ -181,7 +181,7 @@ export function CoachingProgramForm({
           onChange={(e) =>
             setValues((v) => ({ ...v, status: e.target.value as CoachingProgramFormValues["status"] }))
           }
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
@@ -191,7 +191,7 @@ export function CoachingProgramForm({
 
       <button
         type="submit"
-        className="rounded-md bg-amber-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-amber-900"
+        className="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hover"
       >
         {submitLabel}
       </button>

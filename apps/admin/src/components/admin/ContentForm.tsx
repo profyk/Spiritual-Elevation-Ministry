@@ -14,6 +14,7 @@ export interface ContentFormValues {
   status: "draft" | "scheduled" | "published" | "unpublished" | "archived";
   scheduledFor: string;
   coverMediaId: string | null;
+  coverMediaAltText: string | null;
   mediaId: string | null;
 }
 
@@ -28,6 +29,7 @@ const DEFAULTS: ContentFormValues = {
   status: "draft",
   scheduledFor: "",
   coverMediaId: null,
+  coverMediaAltText: null,
   mediaId: null,
 };
 
@@ -73,7 +75,7 @@ export function ContentForm({
             onChange={(e) =>
               setValues((v) => ({ ...v, contentType: e.target.value as ContentFormValues["contentType"] }))
             }
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           >
             <option value="prophetic_message">Prophetic message</option>
             <option value="sermon">Sermon</option>
@@ -92,7 +94,7 @@ export function ContentForm({
             onChange={(e) =>
               setValues((v) => ({ ...v, status: e.target.value as ContentFormValues["status"] }))
             }
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           >
             <option value="draft">Draft</option>
             <option value="scheduled">Scheduled</option>
@@ -120,7 +122,7 @@ export function ContentForm({
               slug: slugTouched ? v.slug : slugify(title),
             }));
           }}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
@@ -137,7 +139,7 @@ export function ContentForm({
             setSlugTouched(true);
             setValues((v) => ({ ...v, slug: e.target.value }));
           }}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm font-mono text-xs"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm font-mono text-xs"
         />
       </div>
 
@@ -151,7 +153,7 @@ export function ContentForm({
           rows={2}
           value={values.summary}
           onChange={(e) => setValues((v) => ({ ...v, summary: e.target.value }))}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
@@ -165,7 +167,7 @@ export function ContentForm({
           rows={10}
           value={values.body}
           onChange={(e) => setValues((v) => ({ ...v, body: e.target.value }))}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
@@ -179,7 +181,7 @@ export function ContentForm({
             name="category"
             value={values.category}
             onChange={(e) => setValues((v) => ({ ...v, category: e.target.value }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -191,7 +193,7 @@ export function ContentForm({
             name="tags"
             value={values.tags}
             onChange={(e) => setValues((v) => ({ ...v, tags: e.target.value }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
       </div>
@@ -201,6 +203,7 @@ export function ContentForm({
         label="Cover image"
         kind="image"
         initialMediaId={values.coverMediaId}
+        initialAltText={values.coverMediaAltText}
       />
 
       {values.contentType === "sermon" && (
@@ -247,7 +250,7 @@ export function ContentForm({
             type="datetime-local"
             value={values.scheduledFor}
             onChange={(e) => setValues((v) => ({ ...v, scheduledFor: e.target.value }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
       )}
@@ -255,11 +258,11 @@ export function ContentForm({
       </fieldset>
 
       {readOnly ? (
-        <p className="text-xs text-neutral-500">Read-only — your role can review but not edit content.</p>
+        <p className="text-xs text-ink-faint">Read-only — your role can review but not edit content.</p>
       ) : (
         <button
           type="submit"
-          className="rounded-md bg-amber-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-amber-900"
+          className="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hover"
         >
           {submitLabel}
         </button>

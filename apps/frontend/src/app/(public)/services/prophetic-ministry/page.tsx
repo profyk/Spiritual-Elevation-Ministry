@@ -19,9 +19,9 @@ export default async function PropheticMinistryPage() {
 
   return (
     <Container className="max-w-3xl py-12">
-      <Flame className="h-8 w-8 text-amber-800" aria-hidden="true" />
-      <h1 className="mt-4 text-2xl font-semibold text-neutral-900">Prophetic Ministry</h1>
-      <p className="mt-3 text-neutral-600">
+      <Flame className="h-8 w-8 text-accent-ink" aria-hidden="true" />
+      <h1 className="mt-4 text-2xl font-semibold text-ink">Prophetic Ministry</h1>
+      <p className="mt-3 text-ink-muted">
         [SAMPLE] Placeholder description of the ministry&apos;s prophetic ministry offering.
         Replace with real content from Admin before launch.
       </p>
@@ -34,8 +34,8 @@ export default async function PropheticMinistryPage() {
         <WhatsAppButton context={{ service: "prophetic-ministry" }} />
       </div>
 
-      <div className="mt-10 rounded-lg border border-neutral-200 p-6">
-        <h2 className="mb-4 text-lg font-medium text-neutral-900">Request Prophetic Ministry</h2>
+      <div className="mt-10 rounded-lg border border-line p-6">
+        <h2 className="mb-4 text-lg font-medium text-ink">Request Prophetic Ministry</h2>
         <MinistryRequestForm requestType="prophetic_ministry" />
       </div>
     </Container>

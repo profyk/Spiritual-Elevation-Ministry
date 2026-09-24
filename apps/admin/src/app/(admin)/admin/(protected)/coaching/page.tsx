@@ -22,15 +22,15 @@ export default async function AdminCoachingPage() {
         <h1 className="text-xl font-semibold">Coaching Programs</h1>
         <Link
           href="/admin/coaching/new"
-          className="rounded-md bg-amber-800 px-4 py-2 text-sm font-medium text-white hover:bg-amber-900"
+          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover"
         >
           New program
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
+      <div className="overflow-hidden rounded-lg border border-line bg-surface">
         <table className="w-full text-sm">
-          <thead className="border-b border-neutral-200 bg-neutral-50 text-left text-neutral-500">
+          <thead className="border-b border-line bg-surface-2 text-left text-ink-faint">
             <tr>
               <th className="px-4 py-2 font-medium">Title</th>
               <th className="px-4 py-2 font-medium">Status</th>
@@ -39,9 +39,9 @@ export default async function AdminCoachingPage() {
           </thead>
           <tbody>
             {programs.map((program) => (
-              <tr key={program.id} className="border-b border-neutral-100 last:border-0">
+              <tr key={program.id} className="border-b border-line-faint last:border-0">
                 <td className="px-4 py-2">
-                  <Link href={`/admin/coaching/${program.id}`} className="text-amber-900 hover:underline">
+                  <Link href={`/admin/coaching/${program.id}`} className="text-accent-ink hover:underline">
                     {program.title}
                   </Link>
                 </td>
@@ -53,7 +53,7 @@ export default async function AdminCoachingPage() {
             ))}
             {programs.length === 0 && (
               <tr>
-                <td colSpan={3} className="px-4 py-6 text-center text-neutral-500">
+                <td colSpan={3} className="px-4 py-6 text-center text-ink-faint">
                   No coaching programs yet.
                 </td>
               </tr>
@@ -62,7 +62,7 @@ export default async function AdminCoachingPage() {
         </table>
       </div>
 
-      <p className="mt-4 text-xs text-neutral-400">
+      <p className="mt-4 text-xs text-ink-faint">
         Enrollment interest submitted from the public site appears in Requests (type
         &quot;coaching interest&quot;). Converting one into a tracked enrollment with payment
         status is not built yet — currently the ministry follows up manually.

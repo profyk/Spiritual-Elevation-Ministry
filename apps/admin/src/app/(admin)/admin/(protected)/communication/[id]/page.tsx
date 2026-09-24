@@ -4,6 +4,7 @@ import { adminApiFetchServer } from "@/lib/api-client";
 import { StaffChatThread } from "@/components/admin/StaffChatThread";
 import { ConversationNotes } from "@/components/admin/ConversationNotes";
 import { ConversationActions } from "@/components/admin/ConversationActions";
+import { isAdminOrAbove } from "@sem/shared";
 
 interface ConversationDetail {
   id: string;
@@ -64,7 +65,7 @@ export default async function ConversationDetailPage({
     <div>
       <div className="mb-4">
         <h1 className="text-xl font-semibold">{conversation.visitor_name}</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-ink-faint">
           {[conversation.visitor_contact_email, conversation.visitor_contact_phone]
             .filter(Boolean)
             .join(" · ")}{" "}
@@ -79,6 +80,7 @@ export default async function ConversationDetailPage({
           status={conversation.status}
           assignedTo={conversation.assigned_to}
           staffOptions={staffOptions}
+          canDelete={isAdminOrAbove(session.admin)}
         />
       </div>
 

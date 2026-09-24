@@ -23,6 +23,7 @@ function parseFormPayload(formData: FormData) {
     // local time and normalize to a full ISO 8601 string.
     scheduledFor: scheduledForRaw ? new Date(String(scheduledForRaw)).toISOString() : null,
     coverMediaId: formData.get("coverMediaId") || null,
+    coverMediaAltText: formData.get("coverMediaAltText") || undefined,
     mediaId: formData.get("mediaId") || null,
   };
 }

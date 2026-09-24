@@ -18,6 +18,7 @@ const NAV_ITEMS: { href: string; label: string; minRole?: AdminRole }[] = [
   { href: "/admin/settings", label: "Settings", minRole: "admin" },
   { href: "/admin/users", label: "Users & Roles", minRole: "super_admin" },
   { href: "/admin/audit-log", label: "Audit Log", minRole: "admin" },
+  { href: "/admin/account", label: "Account" },
 ];
 
 const ROLE_RANK: Record<AdminRole, number> = {
@@ -31,7 +32,7 @@ export function AdminSidebar({ role }: { role: AdminRole }) {
   const pathname = usePathname();
 
   return (
-    <nav className="w-56 flex-shrink-0 overflow-y-auto border-r border-neutral-200 bg-white p-4">
+    <nav className="w-56 flex-shrink-0 overflow-y-auto border-r border-line bg-surface p-4">
       <ul className="space-y-1">
         {NAV_ITEMS.filter((item) => !item.minRole || ROLE_RANK[role] >= ROLE_RANK[item.minRole]).map(
           (item) => {
@@ -42,8 +43,8 @@ export function AdminSidebar({ role }: { role: AdminRole }) {
                   href={item.href}
                   className={`block rounded-md px-3 py-2 text-sm ${
                     active
-                      ? "bg-amber-50 font-medium text-amber-900"
-                      : "text-neutral-600 hover:bg-neutral-100"
+                      ? "bg-accent-surface font-medium text-accent-ink"
+                      : "text-ink-muted hover:bg-surface-3"
                   }`}
                 >
                   {item.label}

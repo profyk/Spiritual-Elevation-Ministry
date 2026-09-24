@@ -16,6 +16,7 @@ export interface EventFormValues {
   rsvpEnabled: boolean;
   capacity: string;
   coverMediaId: string | null;
+  coverMediaAltText: string | null;
 }
 
 const DEFAULTS: EventFormValues = {
@@ -31,6 +32,7 @@ const DEFAULTS: EventFormValues = {
   rsvpEnabled: false,
   capacity: "",
   coverMediaId: null,
+  coverMediaAltText: null,
 };
 
 function slugify(input: string) {
@@ -68,7 +70,7 @@ export function EventForm({
             const title = e.target.value;
             setValues((v) => ({ ...v, title, slug: slugTouched ? v.slug : slugify(title) }));
           }}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
@@ -85,7 +87,7 @@ export function EventForm({
             setSlugTouched(true);
             setValues((v) => ({ ...v, slug: e.target.value }));
           }}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm font-mono text-xs"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm font-mono text-xs"
         />
       </div>
 
@@ -99,7 +101,7 @@ export function EventForm({
           rows={4}
           value={values.description}
           onChange={(e) => setValues((v) => ({ ...v, description: e.target.value }))}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="w-full rounded-md border border-line px-3 py-2 text-sm"
         />
       </div>
 
@@ -115,7 +117,7 @@ export function EventForm({
             required
             value={values.startAt}
             onChange={(e) => setValues((v) => ({ ...v, startAt: e.target.value }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -128,7 +130,7 @@ export function EventForm({
             type="datetime-local"
             value={values.endAt}
             onChange={(e) => setValues((v) => ({ ...v, endAt: e.target.value }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
       </div>
@@ -145,7 +147,7 @@ export function EventForm({
             onChange={(e) =>
               setValues((v) => ({ ...v, locationType: e.target.value as EventFormValues["locationType"] }))
             }
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           >
             <option value="physical">Physical</option>
             <option value="online">Online</option>
@@ -160,7 +162,7 @@ export function EventForm({
             name="status"
             value={values.status}
             onChange={(e) => setValues((v) => ({ ...v, status: e.target.value as EventFormValues["status"] }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
@@ -180,7 +182,7 @@ export function EventForm({
             name="locationAddress"
             value={values.locationAddress}
             onChange={(e) => setValues((v) => ({ ...v, locationAddress: e.target.value }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
       ) : (
@@ -194,7 +196,7 @@ export function EventForm({
             type="url"
             value={values.onlineUrl}
             onChange={(e) => setValues((v) => ({ ...v, onlineUrl: e.target.value }))}
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-line px-3 py-2 text-sm"
           />
         </div>
       )}
@@ -204,6 +206,7 @@ export function EventForm({
         label="Cover image"
         kind="image"
         initialMediaId={values.coverMediaId}
+        initialAltText={values.coverMediaAltText}
       />
 
       <div className="flex items-center gap-4">
@@ -229,7 +232,7 @@ export function EventForm({
               placeholder="Capacity"
               value={values.capacity}
               onChange={(e) => setValues((v) => ({ ...v, capacity: e.target.value }))}
-              className="w-28 rounded-md border border-neutral-300 px-3 py-2 text-sm"
+              className="w-28 rounded-md border border-line px-3 py-2 text-sm"
             />
           </div>
         )}
@@ -237,7 +240,7 @@ export function EventForm({
 
       <button
         type="submit"
-        className="rounded-md bg-amber-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-amber-900"
+        className="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hover"
       >
         {submitLabel}
       </button>

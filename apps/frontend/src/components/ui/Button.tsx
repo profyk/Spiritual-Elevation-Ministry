@@ -2,9 +2,9 @@ import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
 
 const VARIANTS = {
-  primary: "bg-amber-800 text-white hover:bg-amber-900",
-  secondary: "bg-white text-amber-900 border border-amber-800 hover:bg-amber-50",
-  ghost: "text-amber-900 hover:bg-amber-50",
+  primary: "bg-accent text-white hover:bg-accent-hover",
+  secondary: "bg-surface text-accent-ink border border-accent-line hover:bg-accent-surface",
+  ghost: "text-accent-ink hover:bg-accent-surface",
 } as const;
 
 type Variant = keyof typeof VARIANTS;

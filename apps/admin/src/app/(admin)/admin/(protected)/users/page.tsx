@@ -22,9 +22,9 @@ export default async function AdminUsersPage() {
     <div>
       <h1 className="mb-6 text-xl font-semibold">Users &amp; Roles</h1>
       <NewAdminUserForm />
-      <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
+      <div className="overflow-hidden rounded-lg border border-line bg-surface">
         <table className="w-full text-sm">
-          <thead className="border-b border-neutral-200 bg-neutral-50 text-left text-neutral-500">
+          <thead className="border-b border-line bg-surface-2 text-left text-ink-faint">
             <tr>
               <th className="px-4 py-2 font-medium">Name</th>
               <th className="px-4 py-2 font-medium">Role</th>
@@ -37,7 +37,7 @@ export default async function AdminUsersPage() {
             ))}
             {users.length === 0 && (
               <tr>
-                <td colSpan={3} className="px-4 py-6 text-center text-neutral-500">
+                <td colSpan={3} className="px-4 py-6 text-center text-ink-faint">
                   No admin users found.
                 </td>
               </tr>

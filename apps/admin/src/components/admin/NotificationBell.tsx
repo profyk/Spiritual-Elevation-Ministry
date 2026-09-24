@@ -55,19 +55,19 @@ export function NotificationBell({
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label="Notifications"
-        className="relative rounded-md p-2 text-neutral-600 hover:bg-neutral-100"
+        className="relative rounded-md p-2 text-ink-muted hover:bg-surface-3"
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-medium text-white">
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-medium text-white">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute right-0 z-10 mt-2 w-80 rounded-lg border border-neutral-200 bg-white shadow-lg">
-          <div className="flex items-center justify-between border-b border-neutral-100 px-3 py-2">
+        <div className="absolute right-0 z-10 mt-2 w-80 rounded-lg border border-line bg-surface shadow-lg">
+          <div className="flex items-center justify-between border-b border-line-faint px-3 py-2">
             <span className="text-sm font-medium">Notifications</span>
             {unreadCount > 0 && (
               <button
@@ -75,7 +75,7 @@ export function NotificationBell({
                   setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
                   markAllNotificationsRead();
                 }}
-                className="text-xs text-amber-800 hover:underline"
+                className="text-xs text-accent-ink hover:underline"
               >
                 Mark all read
               </button>
@@ -83,19 +83,19 @@ export function NotificationBell({
           </div>
           <div className="max-h-80 overflow-y-auto">
             {notifications.length === 0 && (
-              <p className="px-3 py-4 text-center text-xs text-neutral-400">No notifications.</p>
+              <p className="px-3 py-4 text-center text-xs text-ink-faint">No notifications.</p>
             )}
             {notifications.slice(0, 20).map((n) => (
               <Link
                 key={n.id}
                 href={n.link_url ?? "/admin"}
                 onClick={() => setOpen(false)}
-                className={`block border-b border-neutral-50 px-3 py-2 text-sm hover:bg-neutral-50 ${
-                  n.is_read ? "text-neutral-500" : "font-medium text-neutral-900"
+                className={`block border-b border-line-faint px-3 py-2 text-sm hover:bg-surface-2 ${
+                  n.is_read ? "text-ink-faint" : "font-medium text-ink"
                 }`}
               >
                 {n.title}
-                <p className="text-xs font-normal text-neutral-400">
+                <p className="text-xs font-normal text-ink-faint">
                   {new Date(n.created_at).toLocaleString()}
                 </p>
               </Link>
@@ -104,7 +104,7 @@ export function NotificationBell({
           <Link
             href="/admin/notifications/preferences"
             onClick={() => setOpen(false)}
-            className="block border-t border-neutral-100 px-3 py-2 text-center text-xs text-neutral-500 hover:bg-neutral-50"
+            className="block border-t border-line-faint px-3 py-2 text-center text-xs text-ink-faint hover:bg-surface-2"
           >
             Notification preferences
           </Link>

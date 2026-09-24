@@ -92,6 +92,13 @@ submissionsRouter.post("/rsvps", async (req, res) => {
     return res.status(500).json({ error: "Could not submit your RSVP." });
   }
 
+  await notifyAdmins({
+    category: "new_rsvp",
+    title: "New event RSVP",
+    body: `${parsed.data.name} RSVP'd (${parsed.data.attendeeCount} attending).`,
+    linkPath: `/admin/events/${parsed.data.eventId}`,
+  });
+
   res.status(201).json({ ok: true });
 });
 
@@ -110,6 +117,7 @@ submissionsRouter.post("/testimonies", async (req, res) => {
     display_name: parsed.data.isAnonymous ? null : parsed.data.displayName || null,
     is_anonymous: parsed.data.isAnonymous,
     body: parsed.data.body,
+    media_id: parsed.data.mediaId ?? null,
   });
 
   if (error) {

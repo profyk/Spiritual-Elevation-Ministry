@@ -26,7 +26,7 @@ export default async function AdminTestimoniesPage() {
           <TestimonyRow key={t.id} testimony={t} />
         ))}
         {testimonies.length === 0 && (
-          <p className="text-sm text-neutral-500">No testimonies to review.</p>
+          <p className="text-sm text-ink-faint">No testimonies to review.</p>
         )}
       </div>
     </div>

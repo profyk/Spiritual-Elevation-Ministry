@@ -26,25 +26,25 @@ export default async function TestimoniesPage() {
 
   return (
     <Container className="max-w-2xl py-12">
-      <h1 className="text-2xl font-semibold text-neutral-900">Testimonies</h1>
+      <h1 className="text-2xl font-semibold text-ink">Testimonies</h1>
 
       <div className="mt-8 space-y-4">
         {testimonies.length === 0 && (
-          <p className="text-sm text-neutral-500">No testimonies published yet.</p>
+          <p className="text-sm text-ink-faint">No testimonies published yet.</p>
         )}
         {testimonies.map((t) => (
-          <blockquote key={t.id} className="rounded-lg border border-neutral-200 p-5">
-            <p className="text-neutral-700">{t.body}</p>
-            <footer className="mt-2 text-sm text-neutral-500">
+          <blockquote key={t.id} className="rounded-lg border border-line p-5">
+            <p className="text-ink-muted">{t.body}</p>
+            <footer className="mt-2 text-sm text-ink-faint">
               — {t.is_anonymous || !t.display_name ? "Anonymous" : t.display_name}
             </footer>
           </blockquote>
         ))}
       </div>
 
-      <div className="mt-10 rounded-lg border border-neutral-200 p-6">
-        <h2 className="mb-4 text-lg font-medium text-neutral-900">Share Your Testimony</h2>
-        <p className="mb-4 text-sm text-neutral-500">
+      <div className="mt-10 rounded-lg border border-line p-6">
+        <h2 className="mb-4 text-lg font-medium text-ink">Share Your Testimony</h2>
+        <p className="mb-4 text-sm text-ink-faint">
           Submissions are reviewed by the ministry before appearing publicly.
         </p>
         <TestimonyForm />

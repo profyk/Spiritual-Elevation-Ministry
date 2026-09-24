@@ -44,8 +44,8 @@ export default async function AdminCommunicationPage({
             href={`/admin/communication?tab=${t.value}`}
             className={`rounded-md px-3 py-1.5 text-sm ${
               activeTab.value === t.value
-                ? "bg-amber-800 text-white"
-                : "border border-neutral-300 text-neutral-600 hover:bg-neutral-50"
+                ? "bg-accent text-white"
+                : "border border-line text-ink-muted hover:bg-surface-2"
             }`}
           >
             {t.label}
@@ -58,29 +58,29 @@ export default async function AdminCommunicationPage({
           <Link
             key={c.id}
             href={`/admin/communication/${c.id}`}
-            className="block rounded-lg border border-neutral-200 bg-white p-4 hover:border-amber-800"
+            className="block rounded-lg border border-line bg-surface p-4 hover:border-accent-line"
           >
             <div className="flex items-center justify-between">
-              <span className="font-medium text-neutral-900">{c.visitor_name}</span>
-              <span className="text-xs text-neutral-400">
+              <span className="font-medium text-ink">{c.visitor_name}</span>
+              <span className="text-xs text-ink-faint">
                 {new Date(c.updated_at).toLocaleString()}
               </span>
             </div>
             <div className="mt-1 flex gap-2 text-xs">
-              <span className="rounded bg-neutral-100 px-2 py-0.5 capitalize text-neutral-600">
+              <span className="rounded bg-surface-3 px-2 py-0.5 capitalize text-ink-muted">
                 {c.service_context.replace("_", " ")}
               </span>
-              <span className="rounded bg-neutral-100 px-2 py-0.5 capitalize text-neutral-600">
+              <span className="rounded bg-surface-3 px-2 py-0.5 capitalize text-ink-muted">
                 {c.status.replace("_", " ")}
               </span>
               {!c.assigned_to && (
-                <span className="rounded bg-amber-100 px-2 py-0.5 text-amber-800">Unassigned</span>
+                <span className="rounded bg-accent-surface px-2 py-0.5 text-accent-ink">Unassigned</span>
               )}
             </div>
           </Link>
         ))}
         {conversations.length === 0 && (
-          <p className="text-sm text-neutral-500">No conversations in this view.</p>
+          <p className="text-sm text-ink-faint">No conversations in this view.</p>
         )}
       </div>
     </div>

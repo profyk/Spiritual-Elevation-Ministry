@@ -24,7 +24,7 @@ export async function WhatsAppButton({
       href={buildWhatsAppLink(number, context)}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex items-center justify-center gap-2 rounded-md border border-green-700 bg-green-700 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-green-800 ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-md border border-success-line bg-success px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-success-hover ${className}`}
     >
       <MessageCircle className="h-4 w-4" aria-hidden="true" />
       {label}
