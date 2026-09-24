@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # gitleaks-action diffs the push's commit range — a shallow
+          # clone (the default) leaves the parent commit unreachable and
+          # the scan fails outright with "unknown revision", not just an
+          # empty result. Needs full history.
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
