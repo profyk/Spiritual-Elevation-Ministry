@@ -22,7 +22,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="border-b border-line bg-surface">
+    <header className="flex-shrink-0 border-b border-line bg-surface">
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold text-ink">
           <Image src="/brand/logo.png" alt="" aria-hidden width={36} height={36} priority />

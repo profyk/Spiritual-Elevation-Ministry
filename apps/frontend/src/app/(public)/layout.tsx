@@ -4,11 +4,13 @@ import { ChatWidget } from "@/components/chat/ChatWidget";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="flex h-screen flex-col overflow-hidden">
       <SiteHeader />
-      <div className="flex-1">{children}</div>
-      <SiteFooter />
+      <div className="min-w-0 flex-1 overflow-auto">
+        {children}
+        <SiteFooter />
+      </div>
       <ChatWidget />
-    </>
+    </div>
   );
 }
