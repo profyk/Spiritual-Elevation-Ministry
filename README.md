@@ -12,12 +12,20 @@ admin dashboard, and API all live in this one project.
 
 ## Status
 
-Phases 0–5 of the build (foundation, public website, content management, real-time chat,
-notifications) are built and pass build/lint/unit tests. **None of it has been run against a real
-Supabase project** — see `docs/DEPLOYMENT.md` to stand one up and actually verify auth, RLS, and
-Realtime end-to-end. Known gaps: no file/media upload UI, no scheduled-publish or
-retention-archive job, no online payment, no Playwright coverage of the full acceptance journey
-yet.
+Every phase of the build is done — foundation, public website, content management, real-time
+chat with file attachments, notifications, scheduled publishing/retention jobs, and a Playwright
+suite covering the SPEC §39 acceptance journey. Build/lint/unit tests all pass.
+
+**None of it has been run against a real Supabase project.** This environment never had
+Docker/the Supabase CLI, so auth, RLS, Realtime, Storage, and the e2e suite are all correct per
+design and per a written pgTAP test plan, but not proven live. See `docs/DEPLOYMENT.md` to stand
+one up and actually verify it end-to-end — that's genuinely the next step, not further blind
+building.
+
+Remaining known gaps: no online payment for coaching (by design — SPEC §8 keeps it offline for
+v1), no one-click permanent-delete for archived data (SPEC §28 requires that as a separate,
+explicit action from archiving), and testimony submissions don't have a file-attachment option
+(chat and content uploads do).
 
 ## Getting started
 
