@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -34,7 +35,9 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-neutral-50 px-4">
+      <Image src="/brand/logo.png" alt="Spiritual Elevation Ministry" width={112} height={112} priority />
+
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm space-y-4 rounded-lg border border-neutral-200 bg-white p-6"

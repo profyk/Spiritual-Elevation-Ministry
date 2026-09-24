@@ -1,10 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function SiteFooter() {
   return (
     <footer className="mt-auto border-t border-neutral-200 bg-neutral-50">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-8 text-sm text-neutral-500 sm:px-6 sm:flex-row sm:items-center sm:justify-between">
-        <p>
+        <p className="flex items-center gap-2">
+          <Image src="/brand/logo.png" alt="" aria-hidden width={24} height={24} />
           &copy; {new Date().getFullYear()} Spiritual Elevation Ministry.{" "}
           <span className="italic">[SAMPLE content — replace before launch]</span>
         </p>

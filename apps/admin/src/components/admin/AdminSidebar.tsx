@@ -31,7 +31,7 @@ export function AdminSidebar({ role }: { role: AdminRole }) {
   const pathname = usePathname();
 
   return (
-    <nav className="w-56 flex-shrink-0 border-r border-neutral-200 bg-white p-4">
+    <nav className="w-56 flex-shrink-0 overflow-y-auto border-r border-neutral-200 bg-white p-4">
       <ul className="space-y-1">
         {NAV_ITEMS.filter((item) => !item.minRole || ROLE_RANK[role] >= ROLE_RANK[item.minRole]).map(
           (item) => {

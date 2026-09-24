@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/auth/get-admin";
 import { adminApiFetchServer } from "@/lib/api-client";
@@ -38,17 +39,20 @@ export default async function AdminLayout({
   >("/admin/notifications", session.accessToken);
 
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-50">
-      <header className="flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-3">
-        <span className="font-medium">Spiritual Elevation Ministry — Admin</span>
+    <div className="flex h-screen flex-col overflow-hidden bg-neutral-50">
+      <header className="flex flex-shrink-0 items-center justify-between border-b border-neutral-200 bg-white px-6 py-3">
+        <div className="flex items-center gap-3">
+          <Image src="/brand/logo.png" alt="" aria-hidden width={36} height={36} className="rounded-sm" />
+          <span className="font-medium">Spiritual Elevation Ministry — Admin</span>
+        </div>
         <div className="flex items-center gap-2">
           <NotificationBell adminId={admin.id} initialNotifications={notifications ?? []} />
           <SignOutButton />
         </div>
       </header>
-      <div className="flex flex-1">
+      <div className="flex min-h-0 flex-1">
         <AdminSidebar role={admin.role} />
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
@@ -21,8 +22,9 @@ export function SiteHeader() {
   return (
     <header className="border-b border-neutral-200 bg-white">
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-4 sm:px-6">
-        <Link href="/" className="font-semibold text-neutral-900">
-          Spiritual Elevation Ministry
+        <Link href="/" className="flex items-center gap-2 font-semibold text-neutral-900">
+          <Image src="/brand/logo.png" alt="" aria-hidden width={36} height={36} priority />
+          <span>Spiritual Elevation Ministry</span>
         </Link>
 
         <nav className="hidden gap-5 text-sm text-neutral-600 lg:flex">
