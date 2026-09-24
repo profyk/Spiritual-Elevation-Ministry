@@ -18,7 +18,6 @@ export async function SiteFooter() {
       url: await getSetting(platform.key, ""),
     }))
   );
-  const activeSocialLinks = socialLinks.filter((s) => s.url);
 
   return (
     <footer className="mt-auto border-t border-line bg-surface-2">
@@ -29,10 +28,10 @@ export async function SiteFooter() {
           <span className="italic">[SAMPLE content — replace before launch]</span>
         </p>
 
-        {activeSocialLinks.length > 0 && (
-          <div className="flex items-center gap-3">
-            <span className="text-xs uppercase tracking-wide text-ink-faint">Follow us</span>
-            {activeSocialLinks.map(({ key, label, Icon, url }) => (
+        <div className="flex items-center gap-3">
+          <span className="text-xs uppercase tracking-wide text-ink-faint">Follow us</span>
+          {socialLinks.map(({ key, label, Icon, url }) =>
+            url ? (
               <a
                 key={key}
                 href={url}
@@ -43,9 +42,18 @@ export async function SiteFooter() {
               >
                 <Icon className="h-4 w-4" />
               </a>
-            ))}
-          </div>
-        )}
+            ) : (
+              <span
+                key={key}
+                aria-label={`${label} (not yet linked)`}
+                title="Not yet linked"
+                className="text-ink-faint opacity-30"
+              >
+                <Icon className="h-4 w-4" />
+              </span>
+            )
+          )}
+        </div>
 
         <nav className="flex gap-4">
           <Link href="/privacy-policy" className="hover:text-ink">
