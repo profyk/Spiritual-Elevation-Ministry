@@ -1,13 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import { Paperclip, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { sendStaffMessage } from "@/app/(admin)/admin/(protected)/communication/actions";
+import { uploadMedia } from "@/lib/media/upload-client";
+import { kindFromMimeType } from "@/lib/media/kind-from-mime";
+import { MessageAttachment } from "@/components/chat/MessageAttachment";
 
 interface ChatMessage {
   id: string;
   sender_type: "visitor" | "staff" | "system";
   body: string | null;
+  attachment_media_id: string | null;
   created_at: string;
 }
 
@@ -20,6 +25,9 @@ export function StaffChatThread({
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [value, setValue] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [pendingAttachment, setPendingAttachment] = useState<{ id: string; name: string } | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -50,12 +58,37 @@ export function StaffChatThread({
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [messages]);
 
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    const kind = kindFromMimeType(file.type);
+    if (!kind) {
+      setUploadError("That file type isn't supported.");
+      return;
+    }
+
+    setUploadError(null);
+    setUploading(true);
+    try {
+      const id = await uploadMedia(file, { kind, context: "chat", conversationId });
+      setPendingAttachment({ id, name: file.name });
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!value.trim()) return;
+    if (!value.trim() && !pendingAttachment) return;
     const body = value.trim();
+    const attachmentMediaId = pendingAttachment?.id;
     setValue("");
-    startTransition(() => sendStaffMessage(conversationId, body));
+    setPendingAttachment(null);
+    startTransition(() => sendStaffMessage(conversationId, body, attachmentMediaId));
   }
 
   return (
@@ -79,26 +112,46 @@ export function StaffChatThread({
             }`}
           >
             {m.body}
+            {m.attachment_media_id && <MessageAttachment mediaId={m.attachment_media_id} />}
           </div>
         ))}
         {messages.length === 0 && (
           <p className="text-sm text-neutral-400">No messages yet.</p>
         )}
       </div>
-      <form onSubmit={handleSubmit} className="flex gap-2 border-t border-neutral-200 p-3">
-        <input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Reply…"
-          className="flex-1 rounded-md border border-neutral-300 px-3 py-1.5 text-sm"
-        />
-        <button
-          type="submit"
-          disabled={isPending}
-          className="rounded-md bg-amber-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-900 disabled:opacity-50"
-        >
-          Send
-        </button>
+      <form onSubmit={handleSubmit} className="border-t border-neutral-200 p-3">
+        {uploadError && <p className="mb-1 text-xs text-red-600">{uploadError}</p>}
+        {pendingAttachment && (
+          <p className="mb-1 flex items-center gap-1 text-xs text-neutral-500">
+            <Paperclip className="h-3 w-3" /> {pendingAttachment.name}
+            <button
+              type="button"
+              onClick={() => setPendingAttachment(null)}
+              className="ml-1 text-neutral-400 hover:text-neutral-700"
+            >
+              remove
+            </button>
+          </p>
+        )}
+        <div className="flex gap-2">
+          <label className="flex cursor-pointer items-center justify-center rounded-md border border-neutral-300 px-2 text-neutral-500 hover:bg-neutral-50">
+            {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}
+            <input type="file" onChange={handleFileChange} disabled={uploading} className="hidden" />
+          </label>
+          <input
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="Reply…"
+            className="flex-1 rounded-md border border-neutral-300 px-3 py-1.5 text-sm"
+          />
+          <button
+            type="submit"
+            disabled={isPending || uploading}
+            className="rounded-md bg-amber-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-900 disabled:opacity-50"
+          >
+            Send
+          </button>
+        </div>
       </form>
     </div>
   );

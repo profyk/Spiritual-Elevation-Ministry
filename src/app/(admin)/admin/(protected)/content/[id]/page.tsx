@@ -18,7 +18,9 @@ export default async function EditContentPage({
   const supabase = await createClient();
   const { data: item } = await supabase
     .from("content_items")
-    .select("content_type, title, slug, summary, body, category, tags, status, scheduled_for")
+    .select(
+      "content_type, title, slug, summary, body, category, tags, status, scheduled_for, cover_media_id, media_id"
+    )
     .eq("id", id)
     .maybeSingle();
 
@@ -43,6 +45,8 @@ export default async function EditContentPage({
           tags: (item.tags ?? []).join(", "),
           status: item.status,
           scheduledFor: item.scheduled_for ? item.scheduled_for.slice(0, 16) : "",
+          coverMediaId: item.cover_media_id,
+          mediaId: item.media_id,
         }}
       />
     </div>

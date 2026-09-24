@@ -24,6 +24,8 @@ export const contentItemSchema = z.object({
   tags: z.array(z.string().trim().max(50)).max(20).default([]),
   status: contentStatusSchema,
   scheduledFor: z.string().datetime().optional().nullable(),
+  coverMediaId: z.string().uuid().optional().nullable(),
+  mediaId: z.string().uuid().optional().nullable(),
 });
 
 export type ContentItemInput = z.infer<typeof contentItemSchema>;

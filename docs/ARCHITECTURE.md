@@ -181,13 +181,24 @@ create policy "staff reads notes"
 
 ## 7. Storage & Media
 
-- Two private buckets: `media` (published content assets) and `attachments` (chat/testimony
-  uploads). Neither is public.
-- All reads go through `GET /api/media/[id]/signed-url`, which checks the requester's permission
-  (public content → anyone; chat attachment → the two conversation parties or staff) before
-  minting a short-lived Supabase Storage signed URL.
-- Upload path validates MIME type + size client-side (fast feedback) and re-validates server-side
-  from the actual bytes before accepting (SPEC §11, §27).
+**Built** (Phase "create everything"): two private Storage buckets, `media` (admin content
+assets — cover images, sermon audio/video) and `attachments` (chat uploads), created by
+`supabase/migrations/0002_storage_and_media_policies.sql`. Storage RLS on both is deliberately
+deny-all — every read and write goes through an API route instead of a client-facing storage
+policy:
+
+- `POST /api/media` — validates the upload (MIME type + size client-side for fast feedback,
+  then re-derived from the actual file bytes server-side via `src/lib/media/validation.ts`'s
+  magic-byte sniffer, not just trusted from the client — SPEC §11, §27), resolves the caller's
+  identity/permission (admin session for content assets, visitor anonymous session scoped to a
+  specific conversation for chat attachments), then uploads via the service-role client and
+  inserts the `media` row.
+- `GET /api/media/[id]/signed-url` — the actual permission check is just the RLS-enforced
+  `select` on `media` succeeding (staff see everything; a visitor sees their own uploads, media
+  attached to their own conversation's messages regardless of who uploaded it, and anything
+  attached to published content/an approved testimony); a hit mints a 10-minute signed URL via
+  the service-role client, a miss 404s. `src/lib/media/get-signed-url.server.ts` is the same
+  logic for use directly in a server component instead of round-tripping through the route.
 
 ## 8. Deployment Plan
 

@@ -89,16 +89,42 @@ npm run start
 is the production command. Point the platform's build command at `npm run build` and set every
 variable from step 5 before the first deploy.
 
-## 7. Verify
+## 7. Scheduled jobs
+
+Two things need to run on a schedule (SPEC §23, §28): auto-publishing scheduled content, and
+archiving conversations/requests past the retention period. Both are plain API routes
+(`/api/cron/publish-scheduled`, `/api/cron/retention`) protected by `CRON_SECRET`, invoked by
+`.github/workflows/cron.yml` — that workflow needs two **GitHub repo secrets** (Settings →
+Secrets and variables → Actions), not `.env` values:
+
+- `SITE_URL` — your deployed site's URL (e.g. `https://your-domain.org`).
+- `CRON_SECRET` — the same value you set for `CRON_SECRET` in your hosting provider's environment
+  variables.
+
+Without both secrets set, nothing auto-publishes or auto-archives — content stays in Scheduled
+until someone flips it manually, which is safe (nothing breaks), just not automatic.
+
+## 8. Storage buckets
+
+`supabase/migrations/0002_storage_and_media_policies.sql` creates the `media` and `attachments`
+Storage buckets and their RLS gap fixes — make sure it's applied (step 2 applies every migration
+in order, so this happens automatically via `supabase db push`).
+
+## 9. Verify
 
 After deploying:
 
 1. Visit the homepage — should load even before any content is published.
 2. `/admin/login` → sign in as the Super Admin you created → complete MFA.
 3. Admin → Settings → set a real WhatsApp number and the two legal pages.
-4. From a second (incognito) browser, open the site, click the chat button, start a
-   conversation, and confirm it shows up in Admin → Communication in real time — this is the one
-   thing that absolutely could not be verified without a live project, so check it first.
-5. Run `npm run e2e` locally against the deployed URL (`PLAYWRIGHT_BASE_URL=<url> npm run e2e`)
-   once the Playwright suite covers the SPEC §39 acceptance journey — not written yet (Phase 6
-   flagged this as outstanding).
+4. Admin → Content → New → upload a cover image, confirm it renders on the public page.
+5. From a second (incognito) browser, open the site, click the chat button, start a
+   conversation, attach a file, and confirm it all shows up in Admin → Communication in real
+   time — this is the one thing that absolutely could not be verified without a live project, so
+   check it first.
+6. Trigger each cron route once by hand to confirm the secret is wired up correctly:
+   `curl -X POST https://your-domain.org/api/cron/publish-scheduled -H "Authorization: Bearer <CRON_SECRET>"`
+7. Run `npm run e2e` locally against the deployed URL
+   (`PLAYWRIGHT_BASE_URL=<url> npm run e2e`) — `tests/e2e/acceptance.spec.ts` covers the SPEC §39
+   journey but needs `E2E_SUPABASE_SERVICE_ROLE_KEY` set to provision its own test admin; see the
+   comment at the top of that file.

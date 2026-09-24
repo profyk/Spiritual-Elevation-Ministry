@@ -1,0 +1,28 @@
+name: Scheduled jobs
+
+on:
+  schedule:
+    # Every 15 minutes — scheduled content publishing (SPEC §23).
+    - cron: "*/15 * * * *"
+    # Once a day at 03:00 UTC — data retention archiving (SPEC §28).
+    - cron: "0 3 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  publish-scheduled:
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '*/15 * * * *' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Publish scheduled content
+        run: |
+          curl -sf -X POST "${{ secrets.SITE_URL }}/api/cron/publish-scheduled" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
+
+  retention:
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 3 * * *' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Archive conversations/requests past retention
+        run: |
+          curl -sf -X POST "${{ secrets.SITE_URL }}/api/cron/retention" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"

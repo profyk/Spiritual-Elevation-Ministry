@@ -56,11 +56,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Conversation not found." }, { status: 404 });
   }
 
+  if (parsed.data.attachmentMediaId) {
+    // RLS's "visitor reads own uploaded media" policy means this lookup
+    // itself is the ownership check — it returns nothing for anyone else's
+    // media id, not just their own.
+    const { data: ownedMedia } = await supabase
+      .from("media")
+      .select("id")
+      .eq("id", parsed.data.attachmentMediaId)
+      .maybeSingle();
+    if (!ownedMedia) {
+      return NextResponse.json({ error: "Attachment not found." }, { status: 404 });
+    }
+  }
+
   const { error } = await supabase.from("messages").insert({
     conversation_id: parsed.data.conversationId,
     sender_type: "visitor",
     sender_visitor_auth_id: user.id,
-    body: parsed.data.body,
+    body: parsed.data.body ?? null,
+    attachment_media_id: parsed.data.attachmentMediaId ?? null,
   });
 
   if (error) {

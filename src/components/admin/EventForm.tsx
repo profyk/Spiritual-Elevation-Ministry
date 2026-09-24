@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MediaUploadField } from "@/components/admin/MediaUploadField";
 
 export interface EventFormValues {
   title: string;
@@ -14,6 +15,7 @@ export interface EventFormValues {
   status: "draft" | "published" | "cancelled" | "archived";
   rsvpEnabled: boolean;
   capacity: string;
+  coverMediaId: string | null;
 }
 
 const DEFAULTS: EventFormValues = {
@@ -28,6 +30,7 @@ const DEFAULTS: EventFormValues = {
   status: "draft",
   rsvpEnabled: false,
   capacity: "",
+  coverMediaId: null,
 };
 
 function slugify(input: string) {
@@ -195,6 +198,13 @@ export function EventForm({
           />
         </div>
       )}
+
+      <MediaUploadField
+        name="coverMediaId"
+        label="Cover image"
+        kind="image"
+        initialMediaId={values.coverMediaId}
+      />
 
       <div className="flex items-center gap-4">
         <label className="flex items-center gap-2 text-sm">

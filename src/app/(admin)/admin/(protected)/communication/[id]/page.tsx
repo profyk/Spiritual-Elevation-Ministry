@@ -23,7 +23,7 @@ export default async function ConversationDetailPage({
         .maybeSingle(),
       supabase
         .from("messages")
-        .select("id, sender_type, body, created_at")
+        .select("id, sender_type, body, attachment_media_id, created_at")
         .eq("conversation_id", id)
         .order("created_at", { ascending: true }),
       supabase

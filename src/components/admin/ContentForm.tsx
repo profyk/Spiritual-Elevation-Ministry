@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MediaUploadField } from "@/components/admin/MediaUploadField";
 
 export interface ContentFormValues {
   contentType: "prophetic_message" | "sermon" | "article";
@@ -12,6 +13,8 @@ export interface ContentFormValues {
   tags: string;
   status: "draft" | "scheduled" | "published" | "unpublished" | "archived";
   scheduledFor: string;
+  coverMediaId: string | null;
+  mediaId: string | null;
 }
 
 const DEFAULTS: ContentFormValues = {
@@ -24,6 +27,8 @@ const DEFAULTS: ContentFormValues = {
   tags: "",
   status: "draft",
   scheduledFor: "",
+  coverMediaId: null,
+  mediaId: null,
 };
 
 function slugify(input: string) {
@@ -51,6 +56,7 @@ export function ContentForm({
 }) {
   const [values, setValues] = useState<ContentFormValues>({ ...DEFAULTS, ...initialValues });
   const [slugTouched, setSlugTouched] = useState(Boolean(initialValues?.slug));
+  const [sermonMediaKind, setSermonMediaKind] = useState<"audio" | "video">("audio");
 
   return (
     <form action={action} className="max-w-2xl space-y-4">
@@ -189,6 +195,46 @@ export function ContentForm({
           />
         </div>
       </div>
+
+      <MediaUploadField
+        name="coverMediaId"
+        label="Cover image"
+        kind="image"
+        initialMediaId={values.coverMediaId}
+      />
+
+      {values.contentType === "sermon" && (
+        <div>
+          <span className="mb-1 block text-sm font-medium">Sermon media</span>
+          <div className="mb-2 flex gap-4 text-sm">
+            <label className="flex items-center gap-1">
+              <input
+                type="radio"
+                name="sermonMediaKind"
+                checked={sermonMediaKind === "audio"}
+                onChange={() => setSermonMediaKind("audio")}
+              />
+              Audio
+            </label>
+            <label className="flex items-center gap-1">
+              <input
+                type="radio"
+                name="sermonMediaKind"
+                checked={sermonMediaKind === "video"}
+                onChange={() => setSermonMediaKind("video")}
+              />
+              Video
+            </label>
+          </div>
+          <MediaUploadField
+            key={sermonMediaKind}
+            name="mediaId"
+            label={sermonMediaKind === "audio" ? "Upload audio file" : "Upload video file"}
+            kind={sermonMediaKind}
+            initialMediaId={values.mediaId}
+          />
+        </div>
+      )}
 
       {values.status === "scheduled" && (
         <div>

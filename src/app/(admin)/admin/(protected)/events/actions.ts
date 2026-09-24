@@ -25,6 +25,7 @@ function parseForm(formData: FormData) {
     status: formData.get("status"),
     rsvpEnabled: formData.get("rsvpEnabled") === "on",
     capacity: formData.get("capacity") || undefined,
+    coverMediaId: formData.get("coverMediaId") || null,
   };
 }
 
@@ -53,6 +54,7 @@ export async function createEvent(formData: FormData) {
       status: parsed.status,
       rsvp_enabled: parsed.rsvpEnabled,
       capacity: parsed.capacity ?? null,
+      cover_media_id: parsed.coverMediaId,
     })
     .select("id")
     .single();
@@ -89,6 +91,7 @@ export async function updateEvent(id: string, formData: FormData) {
       status: parsed.status,
       rsvp_enabled: parsed.rsvpEnabled,
       capacity: parsed.capacity ?? null,
+      cover_media_id: parsed.coverMediaId,
     })
     .eq("id", id);
 

@@ -1,14 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MessageCircle, X } from "lucide-react";
+import { MessageCircle, X, Paperclip, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { ensureVisitorSession, getStoredConversationId, setStoredConversationId } from "@/lib/chat/session";
+import { uploadMedia } from "@/lib/media/upload-client";
+import { kindFromMimeType } from "@/lib/media/kind-from-mime";
+import { MessageAttachment } from "@/components/chat/MessageAttachment";
 
 interface ChatMessage {
   id: string;
   sender_type: "visitor" | "staff" | "system";
   body: string | null;
+  attachment_media_id: string | null;
   created_at: string;
 }
 
@@ -35,7 +39,7 @@ export function ChatWidget() {
     const supabase = createClient();
     const { data } = await supabase
       .from("messages")
-      .select("id, sender_type, body, created_at")
+      .select("id, sender_type, body, attachment_media_id, created_at")
       .eq("conversation_id", id)
       .order("created_at", { ascending: true });
     setMessages(data ?? []);
@@ -90,12 +94,12 @@ export function ChatWidget() {
     setConversationId(id);
   }
 
-  async function handleSend(body: string) {
+  async function handleSend(body: string, attachmentMediaId?: string) {
     if (!conversationId) return;
     const response = await fetch("/api/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ conversationId, body }),
+      body: JSON.stringify({ conversationId, body: body || undefined, attachmentMediaId }),
     });
     if (!response.ok) throw new Error("Could not send message.");
   }
@@ -133,10 +137,11 @@ export function ChatWidget() {
                     }`}
                   >
                     {m.body}
+                    {m.attachment_media_id && <MessageAttachment mediaId={m.attachment_media_id} />}
                   </div>
                 ))}
               </div>
-              <MessageBox onSend={handleSend} />
+              <MessageBox conversationId={conversationId} onSend={handleSend} />
             </>
           )}
         </div>
@@ -270,37 +275,89 @@ function IntakeForm({
   );
 }
 
-function MessageBox({ onSend }: { onSend: (body: string) => Promise<void> }) {
+function MessageBox({
+  conversationId,
+  onSend,
+}: {
+  conversationId: string;
+  onSend: (body: string, attachmentMediaId?: string) => Promise<void>;
+}) {
   const [value, setValue] = useState("");
   const [sending, setSending] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [pendingAttachment, setPendingAttachment] = useState<{ id: string; name: string } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    const kind = kindFromMimeType(file.type);
+    if (!kind) {
+      setError("That file type isn't supported.");
+      return;
+    }
+
+    setError(null);
+    setUploading(true);
+    try {
+      const id = await uploadMedia(file, { kind, context: "chat", conversationId });
+      setPendingAttachment({ id, name: file.name });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed.");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!value.trim()) return;
+    if (!value.trim() && !pendingAttachment) return;
     setSending(true);
     try {
-      await onSend(value.trim());
+      await onSend(value.trim(), pendingAttachment?.id);
       setValue("");
+      setPendingAttachment(null);
     } finally {
       setSending(false);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 border-t border-neutral-200 p-3">
-      <input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Type a message…"
-        className="flex-1 rounded-md border border-neutral-300 px-3 py-1.5 text-sm"
-      />
-      <button
-        type="submit"
-        disabled={sending}
-        className="rounded-md bg-amber-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-900 disabled:opacity-50"
-      >
-        Send
-      </button>
+    <form onSubmit={handleSubmit} className="border-t border-neutral-200 p-3">
+      {error && <p className="mb-1 text-xs text-red-600">{error}</p>}
+      {pendingAttachment && (
+        <p className="mb-1 flex items-center gap-1 text-xs text-neutral-500">
+          <Paperclip className="h-3 w-3" /> {pendingAttachment.name}
+          <button
+            type="button"
+            onClick={() => setPendingAttachment(null)}
+            className="ml-1 text-neutral-400 hover:text-neutral-700"
+          >
+            remove
+          </button>
+        </p>
+      )}
+      <div className="flex gap-2">
+        <label className="flex cursor-pointer items-center justify-center rounded-md border border-neutral-300 px-2 text-neutral-500 hover:bg-neutral-50">
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}
+          <input type="file" onChange={handleFileChange} disabled={uploading} className="hidden" />
+        </label>
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Type a message…"
+          className="flex-1 rounded-md border border-neutral-300 px-3 py-1.5 text-sm"
+        />
+        <button
+          type="submit"
+          disabled={sending || uploading}
+          className="rounded-md bg-amber-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-900 disabled:opacity-50"
+        >
+          Send
+        </button>
+      </div>
     </form>
   );
 }

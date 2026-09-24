@@ -17,6 +17,7 @@ export const eventSchema = z.object({
   status: z.enum(["draft", "published", "cancelled", "archived"]),
   rsvpEnabled: z.boolean().default(false),
   capacity: z.coerce.number().int().positive().optional(),
+  coverMediaId: z.string().uuid().optional().nullable(),
 });
 
 export type EventInput = z.infer<typeof eventSchema>;

@@ -25,6 +25,8 @@ function parseFormPayload(formData: FormData) {
     // datetime-local inputs have no timezone offset; interpret in server
     // local time and normalize to a full ISO 8601 string.
     scheduledFor: scheduledForRaw ? new Date(String(scheduledForRaw)).toISOString() : null,
+    coverMediaId: formData.get("coverMediaId") || null,
+    mediaId: formData.get("mediaId") || null,
   };
 }
 
@@ -49,6 +51,8 @@ export async function createContentItem(formData: FormData) {
       published_at: parsed.status === "published" ? new Date().toISOString() : null,
       scheduled_for: parsed.scheduledFor,
       author_id: session!.admin.id,
+      cover_media_id: parsed.coverMediaId,
+      media_id: parsed.mediaId,
     })
     .select("id")
     .single();
@@ -95,6 +99,8 @@ export async function updateContentItem(id: string, formData: FormData) {
       status: parsed.status,
       published_at: becomingPublished ? new Date().toISOString() : undefined,
       scheduled_for: parsed.scheduledFor,
+      cover_media_id: parsed.coverMediaId,
+      media_id: parsed.mediaId,
     })
     .eq("id", id);
 

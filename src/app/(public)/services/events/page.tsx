@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CalendarDays } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { createClient } from "@/lib/supabase/server";
+import { getMediaSignedUrl } from "@/lib/media/get-signed-url.server";
 
 export const metadata: Metadata = {
   title: "Events & Conferences",
@@ -14,11 +15,14 @@ async function getUpcomingEvents() {
     const supabase = await createClient();
     const { data } = await supabase
       .from("events")
-      .select("id, title, slug, start_at, location_type, location_address")
+      .select("id, title, slug, start_at, location_type, location_address, cover_media_id")
       .eq("status", "published")
       .gte("start_at", new Date().toISOString())
       .order("start_at", { ascending: true });
-    return data ?? [];
+
+    const events = data ?? [];
+    const coverUrls = await Promise.all(events.map((e) => getMediaSignedUrl(e.cover_media_id)));
+    return events.map((event, i) => ({ ...event, coverUrl: coverUrls[i] }));
   } catch {
     return [];
   }
@@ -41,16 +45,26 @@ export default async function EventsPage() {
           <Link
             key={event.id}
             href={`/services/events/${event.slug}`}
-            className="block rounded-lg border border-neutral-200 p-5 hover:border-amber-800"
+            className="flex gap-4 rounded-lg border border-neutral-200 p-5 hover:border-amber-800"
           >
-            <h2 className="font-medium text-neutral-900">{event.title}</h2>
-            <p className="mt-1 text-sm text-neutral-500">
-              {new Date(event.start_at).toLocaleString(undefined, {
-                dateStyle: "medium",
-                timeStyle: "short",
-              })}
-              {event.location_address ? ` · ${event.location_address}` : ""}
-            </p>
+            {event.coverUrl && (
+              // eslint-disable-next-line @next/next/no-img-element -- short-lived signed URL
+              <img
+                src={event.coverUrl}
+                alt=""
+                className="h-16 w-16 flex-shrink-0 rounded-md object-cover"
+              />
+            )}
+            <div>
+              <h2 className="font-medium text-neutral-900">{event.title}</h2>
+              <p className="mt-1 text-sm text-neutral-500">
+                {new Date(event.start_at).toLocaleString(undefined, {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
+                {event.location_address ? ` · ${event.location_address}` : ""}
+              </p>
+            </div>
           </Link>
         ))}
       </div>

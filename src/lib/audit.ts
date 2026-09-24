@@ -9,7 +9,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 export async function writeAuditLog(
   supabase: SupabaseClient,
   entry: {
-    actorId: string;
+    /** null for a system-initiated action (a scheduled job), not a human admin. */
+    actorId: string | null;
     action: string;
     entityType: string;
     entityId?: string;

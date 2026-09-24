@@ -27,8 +27,13 @@ export type StartConversationInput = z.infer<typeof startConversationSchema>;
 export const sendMessageSchema = z
   .object({
     conversationId: z.string().uuid(),
-    body: z.string().trim().min(1).max(5000),
+    body: z.string().trim().max(5000).optional(),
+    attachmentMediaId: z.string().uuid().optional(),
   })
-  .strict();
+  .strict()
+  .refine((data) => (data.body && data.body.length > 0) || data.attachmentMediaId, {
+    message: "A message needs text, an attachment, or both.",
+    path: ["body"],
+  });
 
 export type SendMessageInput = z.infer<typeof sendMessageSchema>;

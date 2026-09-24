@@ -13,7 +13,7 @@ export default async function EditEventPage({
   const { data: event } = await supabase
     .from("events")
     .select(
-      "title, slug, description, start_at, end_at, location_type, location_address, online_url, status, rsvp_enabled, capacity"
+      "title, slug, description, start_at, end_at, location_type, location_address, online_url, status, rsvp_enabled, capacity, cover_media_id"
     )
     .eq("id", id)
     .maybeSingle();
@@ -40,6 +40,7 @@ export default async function EditEventPage({
           status: event.status,
           rsvpEnabled: event.rsvp_enabled,
           capacity: event.capacity ? String(event.capacity) : "",
+          coverMediaId: event.cover_media_id,
         }}
       />
     </div>

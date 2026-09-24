@@ -37,13 +37,15 @@ where it shows up:
 
 - **Draft** — nowhere public.
 - **Scheduled** — set a "Publish at" time; it isn't public yet either (the job that flips it
-  to Published automatically isn't built yet — see the note below).
+  to Published automatically on a schedule — see the note below).
 - **Published** — live on the public site.
 - **Unpublished** — was public, pulled back, still editable.
 - **Archived** — hidden from every public list and from the default admin view.
 
-> Scheduled content does **not** yet auto-publish at its scheduled time — that requires a
-> background job that hasn't been built. For now, come back and manually switch it to Published.
+> Scheduled content auto-publishes at its scheduled time via a job that runs every 15 minutes
+> (`.github/workflows/cron.yml`) — this only works once that workflow's `SITE_URL` and
+> `CRON_SECRET` repo secrets are set (see `docs/DEPLOYMENT.md`). Without them, come back and
+> manually switch it to Published.
 
 ## Events
 
@@ -92,9 +94,10 @@ person who submitted it never sees. Approved testimonies can be **Featured** (sh
   relevant service pages. You can edit the wording; only a Super Admin can ever turn one off
   entirely, and that's logged.
 - **Legal pages** — the actual Privacy Policy and Terms of Use text, edited live here.
-- **Data retention** — how many months of chat/request history to keep. This is currently just a
-  recorded number — the job that actually archives/deletes old data on a schedule hasn't been
-  built yet, so nothing is auto-deleted today.
+- **Data retention** — how many months of chat/request history to keep. A daily job archives
+  closed conversations and resolved requests past that age (SPEC §28) — it only **archives**,
+  never deletes; deleting archived history is still a separate, manual, audit-logged action you'd
+  take yourself (not yet built as a one-click admin action).
 
 ## Users & Roles (Super Admin only)
 
@@ -115,8 +118,12 @@ also email you — in-app notifications for things assigned to you are always on
 
 ## Known gaps (as of this build)
 
-- No file/media upload UI yet — cover images, sermon audio/video, and chat/testimony attachments
-  aren't wired up. The database is ready for it; the upload screens aren't built.
-- Scheduled content doesn't auto-publish, and data retention doesn't auto-archive — both need a
-  scheduled job that doesn't exist yet.
+- Cover images, sermon audio/video, and chat attachments can be uploaded — validated for type and
+  size, served only via short-lived signed links, never a public URL. Testimony submissions don't
+  have an attachment option yet (the visitor-facing form doesn't ask for one).
+- Scheduled publishing and data retention archiving both run automatically, but only once
+  `.github/workflows/cron.yml`'s `SITE_URL`/`CRON_SECRET` repo secrets are set — see
+  `docs/DEPLOYMENT.md`.
 - No online payment for coaching programs — follow up manually.
+- No one-click "permanently delete" for archived data yet — SPEC §28 requires that to be a
+  separate, explicit, audit-logged action from archiving, and it isn't built.

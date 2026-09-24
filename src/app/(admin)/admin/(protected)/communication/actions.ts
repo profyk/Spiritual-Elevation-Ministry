@@ -12,16 +12,21 @@ async function requireStaff() {
   return session!;
 }
 
-export async function sendStaffMessage(conversationId: string, body: string) {
+export async function sendStaffMessage(
+  conversationId: string,
+  body: string,
+  attachmentMediaId?: string
+) {
   const session = await requireStaff();
-  if (!body.trim()) return;
+  if (!body.trim() && !attachmentMediaId) return;
   const supabase = await createClient();
 
   const { error } = await supabase.from("messages").insert({
     conversation_id: conversationId,
     sender_type: "staff",
     sender_admin_id: session.admin.id,
-    body: body.trim(),
+    body: body.trim() || null,
+    attachment_media_id: attachmentMediaId ?? null,
   });
 
   if (error) throw new Error(error.message);
