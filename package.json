@@ -1,41 +1,19 @@
 {
   "name": "spiritual-elevation-ministry",
-  "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "e2e": "playwright test"
-  },
-  "dependencies": {
-    "@supabase/ssr": "^0.12.7",
-    "@supabase/supabase-js": "^2.117.1",
-    "lucide-react": "^1.47.0",
-    "next": "16.3.6",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "resend": "^6.28.1",
-    "zod": "^4.6.5"
+    "dev:frontend": "npm run dev --workspace apps/frontend",
+    "dev:admin": "npm run dev --workspace apps/admin",
+    "dev:backend": "npm run dev --workspace apps/backend",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
   },
   "devDependencies": {
-    "@playwright/test": "^1.63.0",
-    "@tailwindcss/postcss": "^4",
-    "@testing-library/dom": "^10.4.2",
-    "@testing-library/react": "^16.3.3",
-    "@types/node": "^24.13.6",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@vitejs/plugin-react": "^6.1.1",
-    "dotenv": "^18.0.3",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.6",
-    "jsdom": "^30.1.1",
-    "tailwindcss": "^4",
-    "typescript": "^5",
-    "vitest": "^5.0.1"
+    "typescript": "^5"
   }
 }

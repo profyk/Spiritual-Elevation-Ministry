@@ -29,11 +29,11 @@ The platform has three logical parts, built as one project:
 | Leader / senior minister name | `[PLACEHOLDER]` |
 | Leader photo | `[PLACEHOLDER]` |
 | Additional ministers/speakers | `[PLACEHOLDER]` |
-| Logo | `[PLACEHOLDER]` |
-| Brand colours | `[PLACEHOLDER]` — use a neutral placeholder palette until supplied |
+| Logo | Received — `apps/frontend/public/brand/logo.png`, `apps/admin/public/brand/logo.png` (not yet wired into any component) |
+| Brand colours | `[PLACEHOLDER]` — logo uses navy blue + gold; current UI still uses a neutral placeholder palette until this is confirmed and applied |
 | WhatsApp number | `[PLACEHOLDER]` |
-| Domain name | `[PLACEHOLDER]` |
-| Hosting preference | `[PLACEHOLDER]` |
+| Domain name | `[PLACEHOLDER]` (public site + admin subdomain) |
+| Hosting preference | Decided — backend on Railway, frontend and admin as separate Vercel projects (`docs/ARCHITECTURE.md` §8) |
 
 Until these are supplied, seed content uses clearly-labelled sample values (e.g. "Sample Minister
 Name", a placeholder logo mark, a neutral colour palette) that are fully editable/deletable from
@@ -468,10 +468,13 @@ from the kickoff message:
 
 ## 41. Open Placeholders — Must Resolve Before Launch
 
-- Ministry leader/speaker names, photos, logo, brand colours (§2).
+- Ministry leader/speaker names, photos, brand colours (§2) — logo received, in
+  `apps/frontend/public/brand/` and `apps/admin/public/brand/`, not yet wired into any component.
 - WhatsApp number (§2, §18).
 - Coaching program names, descriptions, pricing (§8).
-- Domain name and hosting preference (§2).
+- Domain names for the public site and the admin subdomain — hosting itself is decided
+  (`docs/ARCHITECTURE.md` §8: backend on Railway, frontend and admin as separate Vercel
+  projects).
 - Legal review of the Privacy Policy text for the actual country mix served (§25, §26).
 - Confirmed data retention period, currently suggested at 24 months (§28).
 - Primary site language (§40).

@@ -101,8 +101,14 @@ person who submitted it never sees. Approved testimonies can be **Featured** (sh
 
 ## Users & Roles (Super Admin only)
 
-Change anyone's role or deactivate their account. You can't demote or deactivate yourself from
-this screen (on purpose).
+**New admin** creates an account directly — email, full name, and role. It generates a one-time
+temporary password shown to you once on screen; share it with the new admin securely (not
+plain-text email or chat) and have them treat it as something to change at their earliest
+convenience — there's no self-service "change password" screen yet, so that's a manual ask for
+now, not an enforced flow.
+
+You can also change anyone's role or deactivate their account here. You can't demote or
+deactivate yourself from this screen (on purpose).
 
 ## Audit Log (Admin and Super Admin)
 

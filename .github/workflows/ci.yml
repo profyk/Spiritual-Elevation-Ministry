@@ -18,8 +18,16 @@ jobs:
 
       - run: npm ci
 
-      - name: Type check, lint, and build
+      # Runs across every workspace (packages/shared, apps/backend,
+      # apps/frontend, apps/admin) via each package.json's own script —
+      # `next build` also lints+type-checks the two Next.js apps; the
+      # backend/shared "build" scripts are `tsc --noEmit` (they have no
+      # compiled output — both run via tsx/ts directly at runtime).
+      - name: Type check and build
         run: npm run build
+
+      - name: Lint (backend — the two Next.js apps already lint via build)
+        run: npm run lint --workspace apps/backend
 
       - name: Unit tests
         run: npm run test

@@ -13,9 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.schedule == '*/15 * * * *' || github.event_name == 'workflow_dispatch'
     steps:
+      # BACKEND_URL is the Railway backend (apps/backend) — the routes
+      # live there directly, not under a /api prefix, and not on the
+      # frontend's SITE_URL (that's a different app entirely now).
       - name: Publish scheduled content
         run: |
-          curl -sf -X POST "${{ secrets.SITE_URL }}/api/cron/publish-scheduled" \
+          curl -sf -X POST "${{ secrets.BACKEND_URL }}/cron/publish-scheduled" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
 
   retention:
@@ -24,5 +27,5 @@ jobs:
     steps:
       - name: Archive conversations/requests past retention
         run: |
-          curl -sf -X POST "${{ secrets.SITE_URL }}/api/cron/retention" \
+          curl -sf -X POST "${{ secrets.BACKEND_URL }}/cron/retention" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
