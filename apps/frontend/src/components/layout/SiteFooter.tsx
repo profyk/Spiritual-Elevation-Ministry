@@ -31,6 +31,7 @@ export async function SiteFooter() {
 
         {activeSocialLinks.length > 0 && (
           <div className="flex items-center gap-3">
+            <span className="text-xs uppercase tracking-wide text-ink-faint">Follow us</span>
             {activeSocialLinks.map(({ key, label, Icon, url }) => (
               <a
                 key={key}
